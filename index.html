@@ -22,11 +22,11 @@ svg {
 
 .cell text {
   font-weight: bold;
+  font-size: 14px;
   text-transform: capitalize;
 }
 
 .frame {
-  fill: none;
   stroke: #444;
   stroke-width: ;
 }
@@ -50,41 +50,43 @@ circle.hidden {
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
 
-var width = 960,
-    size = 230,
-    padding = 10;
-    padding2 = 20;
+var width = 1200,
+    size = 47,
+    padding = size/20;
 
 var x = d3.scale.linear()
-    .range([padding2 , size - padding2]);
+    .range([padding , size - padding]);
 
 var y = d3.scale.linear()
-    .range([size - padding2 , padding2 ]);
+    .range([size - padding , padding ]);
 
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
-    .ticks(6);
+    .ticks(3);
 
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
-    .ticks(6);
+    .ticks(3);
 
 var color = d3.scale.category10();
 
+
+
+    
+
 //d3.csv("data2/flowers.csv", function(error, data) {
-d3.csv("data/SonarStandardized.csv", function(error, data) {
-
-
+//d3.tsv("data/SonarStandardized.csv", function(error, data) {
+d3.tsv("data/BreastStandardized.csv", function(error, data) {
   if (error) throw error;
-
   var domainByTrait = {},
-      traits = d3.keys(data[0]).filter(function(d) { return d !== "species"; }),
+      traits = d3.keys(data[0]).filter(function(d) { return d !== ""; }),
       n = traits.length;
 
   traits.forEach(function(trait) {
-    domainByTrait[trait] = d3.extent(data, function(d) { return d[trait]; });
+    domainByTrait[trait] = ["0.0", "1.0"];//d3.extent(data, function(d) { return d[trait]; });
+   // debugger;
   });
 
   xAxis.tickSize(size * n);
@@ -103,6 +105,7 @@ d3.csv("data/SonarStandardized.csv", function(error, data) {
     .append("g")
       .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
 
+  /*    
   svg.selectAll(".x.axis")
       .data(traits)
     .enter().append("g")
@@ -116,6 +119,7 @@ d3.csv("data/SonarStandardized.csv", function(error, data) {
       .attr("class", "y axis")
       .attr("transform", function(d, i) { return "translate(0," + i * size + ")"; })
       .each(function(d) { y.domain(domainByTrait[d]); d3.select(this).call(yAxis); });
+  */
 
   var cell = svg.selectAll(".cell")
       .data(cross(traits, traits))
@@ -127,13 +131,14 @@ d3.csv("data/SonarStandardized.csv", function(error, data) {
   // Titles for the diagonal.
   cell.filter(function(d) { return d.i === d.j; }).append("text")
       .attr("x", padding)
-      .attr("y", padding)
-      .attr("dy", ".71em")
-      .text(function(d) { return d.x; });
+      .attr("y", size*0.8)
+      .text(function(d,i) { return "var "+i });  ///d.x; });
 
   cell.call(brush);
 
   function plot(p) {
+    if ((p.i>32 || p.j>32))
+      return;
     var cell = d3.select(this);
 
     x.domain(domainByTrait[p.x]);
@@ -144,16 +149,51 @@ d3.csv("data/SonarStandardized.csv", function(error, data) {
         .attr("x", padding / 2)
         .attr("y", padding / 2)
         .attr("width", size - padding)
-        .attr("height", size - padding);
+        .attr("height", size - padding)
+        .attr("fill", "#aaa");
 
     cell.selectAll("circle")
         .data(data)
       .enter().append("circle")
         .attr("cx", function(d) { return x(d[p.x]); })
         .attr("cy", function(d) { return y(d[p.y]); })
-        .attr("r", 4)
-        .style("fill", function(d) { return color(d.species); });
+        .attr("r", size/25)
+        .style("fill", function(d) { 
+            return "#000";
+          //  return color(d.species); 
+        });  
   }
+
+  
+  var colorRedBlue = d3.scale.linear()
+    .domain([0, 0.4, 1])
+    .range(["#55f", "white", "red"]);
+
+   d3.tsv("data/BreastOutput2.csv", function(error, data2) {
+    var cell = svg.selectAll(".cell")
+      .each(plot2);
+
+    function plot2(p) {
+      var cell = d3.select(this);
+      cell.selectAll(".frame").attr("fill", function(d){
+        if (p.i<p.j){
+          //   console.log(i+" "+j +" "+k+" "+data2[k]["Monotonic"]);
+           var k = p.j*(p.j-1)/2+p.i; 
+           return colorRedBlue(data2[k]["Monotonic"]);
+        }
+        else if (p.i>p.j){
+          var k = p.i*(p.i-1)/2+p.j; 
+          return colorRedBlue(data2[k]["Monotonic"]);
+        }
+        else{
+          return "#fff";
+        }
+      })
+    }
+  });  
+
+
+
 
   var brushCell;
 
@@ -184,8 +224,8 @@ d3.csv("data/SonarStandardized.csv", function(error, data) {
 
 function cross(a, b) {
   var c = [], n = a.length, m = b.length, i, j;
-  for (i = -1; ++i < n;) 
-    for (j = -1; ++j < m;) 
+  for (i = 0; i < n; i++) 
+    for (j = 0; j < m; j++) 
       c.push({x: a[i], i: i, y: b[j], j: j});
   return c;
 }
