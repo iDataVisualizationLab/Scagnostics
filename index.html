@@ -74,23 +74,16 @@ var color = d3.scale.category10();
 
 
 
+//******************************
+var domainByTrait= ["0.0", "1.0"];
+
     
 
-//d3.csv("data2/flowers.csv", function(error, data) {
 //d3.tsv("data/SonarStandardized.csv", function(error, data) {
 d3.tsv("data/BreastStandardized.csv", function(error, data) {
   if (error) throw error;
-  var domainByTrait = {},
-      traits = d3.keys(data[0]).filter(function(d) { return d !== ""; }),
+  var traits = d3.keys(data[0]).filter(function(d) { return d !== ""; }),
       n = traits.length;
-
-  traits.forEach(function(trait) {
-    domainByTrait[trait] = ["0.0", "1.0"];//d3.extent(data, function(d) { return d[trait]; });
-   // debugger;
-  });
-
-  xAxis.tickSize(size * n);
-  yAxis.tickSize(-size * n);
 
   var brush = d3.svg.brush()
       .x(x)
@@ -102,10 +95,15 @@ d3.tsv("data/BreastStandardized.csv", function(error, data) {
   var svg = d3.select("body").append("svg")
       .attr("width", size * n + padding)
       .attr("height", size * n + padding)
-    .append("g")
-      .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
+      .append("g")
+        .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
+
+
 
   /*    
+  xAxis.tickSize(size * n);
+  yAxis.tickSize(-size * n);
+
   svg.selectAll(".x.axis")
       .data(traits)
     .enter().append("g")
@@ -122,7 +120,7 @@ d3.tsv("data/BreastStandardized.csv", function(error, data) {
   */
 
   var cell = svg.selectAll(".cell")
-      .data(cross(traits, traits))
+      .data(cross(traits))
     .enter().append("g")
       .attr("class", "cell")
       .attr("transform", function(d) { return "translate(" + (d.i) * size + "," + d.j * size + ")"; })
@@ -141,8 +139,8 @@ d3.tsv("data/BreastStandardized.csv", function(error, data) {
       return;
     var cell = d3.select(this);
 
-    x.domain(domainByTrait[p.x]);
-    y.domain(domainByTrait[p.y]);
+    x.domain(domainByTrait);
+    y.domain(domainByTrait);
 
     cell.append("rect")
         .attr("class", "frame")
@@ -163,7 +161,6 @@ d3.tsv("data/BreastStandardized.csv", function(error, data) {
           //  return color(d.species); 
         });  
   }
-
   
   var colorRedBlue = d3.scale.linear()
     .domain([0, 0.4, 1])
@@ -201,11 +198,12 @@ d3.tsv("data/BreastStandardized.csv", function(error, data) {
   function brushstart(p) {
     if (brushCell !== this) {
       d3.select(brushCell).call(brush.clear());
-      x.domain(domainByTrait[p.x]);
-      y.domain(domainByTrait[p.y]);
+      x.domain(domainByTrait);
+      y.domain(domainByTrait);
       brushCell = this;
     }
   }
+
 
   // Highlight the selected circles.
   function brushmove(p) {
@@ -222,12 +220,47 @@ d3.tsv("data/BreastStandardized.csv", function(error, data) {
   }
 });
 
-function cross(a, b) {
-  var c = [], n = a.length, m = b.length, i, j;
+/*
+function cross(arr) {
+  var c = [], n = arr.length, i, j;
   for (i = 0; i < n; i++) 
-    for (j = 0; j < m; j++) 
-      c.push({x: a[i], i: i, y: b[j], j: j});
+    for (j = 0; j < n; j++) 
+      c.push({x: arr[i], i: i, y: arr[j], j: j});
   return c;
+}*/
+
+function cross(arr) {
+  var arr2 = [];
+  for (var i=0; i < arr.length;i=i+4){
+    arr2.push(arr[i]);
+  }
+  leaderAlgorithm (arr2);
+//debugger;
+  var c = [], n = arr2.length, i, j;
+  for (i = 0; i < n; i++) 
+    for (j = 0; j < n; j++) 
+      c.push({x: arr2[i], i: i, y: arr2[j], j: j});
+  return c;
+}
+
+
+// Implementation of leader algorithm
+// arr: input variables
+// sim: similarity funciton
+function leaderAlgorithm(arr2, sim){
+  // Reset the input array
+  
+  var arr3 = [];
+  for (var i=0; i<arr2.length;i++){
+  //   arr2[i] = "var "+i;
+  }
+  
+  var list = [];
+  var leader = arr2[0];
+  list.push(leader);
+  //for ()
+
+ 
 }
 
 </script>
