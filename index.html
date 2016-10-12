@@ -6,18 +6,22 @@ svg {
   font: 10px sans-serif;
   padding: 10px;
 }
-
 .axis,
 .frame {
   shape-rendering: crispEdges;
 }
-
 .axis line {
   stroke: #ddd;
 }
 
 .axis path {
   display: none;
+}
+
+text {
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: capitalize;
 }
 
 .cell text {
@@ -30,15 +34,12 @@ svg {
   stroke: #444;
   stroke-width: ;
 }
-
 circle {
   fill-opacity: .8;
 }
-
 circle.hidden {
   fill: #ccc !important;
 }
-
 .extent {
   fill: #000;
   fill-opacity: .125;
@@ -49,9 +50,8 @@ circle.hidden {
 <body>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
-
 var width = 1200,
-    size = 47,
+    size = 80,
     padding = size/20;
 
 var x = d3.scale.linear()
@@ -72,8 +72,6 @@ var yAxis = d3.svg.axis()
 
 var color = d3.scale.category10();
 
-
-
 //******************************
 var domainByTrait= ["0.0", "1.0"];
 
@@ -82,6 +80,7 @@ var domainByTrait= ["0.0", "1.0"];
 //d3.tsv("data/SonarStandardized.csv", function(error, data) {
 d3.tsv("data/BreastStandardized.csv", function(error, data) {
   if (error) throw error;
+
   var traits = d3.keys(data[0]).filter(function(d) { return d !== ""; }),
       n = traits.length;
 
@@ -98,102 +97,177 @@ d3.tsv("data/BreastStandardized.csv", function(error, data) {
       .append("g")
         .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
 
-
-
-  /*    
-  xAxis.tickSize(size * n);
-  yAxis.tickSize(-size * n);
-
-  svg.selectAll(".x.axis")
-      .data(traits)
-    .enter().append("g")
-      .attr("class", "x axis")
-      .attr("transform", function(d, i) { return "translate(" + (n - i - 1) * size + ",0)"; })
-      .each(function(d) { x.domain(domainByTrait[d]); d3.select(this).call(xAxis); });
-
-  svg.selectAll(".y.axis")
-      .data(traits)
-    .enter().append("g")
-      .attr("class", "y axis")
-      .attr("transform", function(d, i) { return "translate(0," + i * size + ")"; })
-      .each(function(d) { y.domain(domainByTrait[d]); d3.select(this).call(yAxis); });
-  */
-
-  var cell = svg.selectAll(".cell")
-      .data(cross(traits))
-    .enter().append("g")
-      .attr("class", "cell")
-      .attr("transform", function(d) { return "translate(" + (d.i) * size + "," + d.j * size + ")"; })
-      .each(plot);
-
-  // Titles for the diagonal.
-  cell.filter(function(d) { return d.i === d.j; }).append("text")
-      .attr("x", padding)
-      .attr("y", size*0.8)
-      .text(function(d,i) { return "var "+i });  ///d.x; });
-
-  cell.call(brush);
-
-  function plot(p) {
-    if ((p.i>32 || p.j>32))
-      return;
-    var cell = d3.select(this);
-
-    x.domain(domainByTrait);
-    y.domain(domainByTrait);
-
-    cell.append("rect")
-        .attr("class", "frame")
-        .attr("x", padding / 2)
-        .attr("y", padding / 2)
-        .attr("width", size - padding)
-        .attr("height", size - padding)
-        .attr("fill", "#aaa");
-
-    cell.selectAll("circle")
-        .data(data)
-      .enter().append("circle")
-        .attr("cx", function(d) { return x(d[p.x]); })
-        .attr("cy", function(d) { return y(d[p.y]); })
-        .attr("r", size/25)
-        .style("fill", function(d) { 
-            return "#000";
-          //  return color(d.species); 
-        });  
-  }
-  
   var colorRedBlue = d3.scale.linear()
     .domain([0, 0.4, 1])
     .range(["#55f", "white", "red"]);
 
-   d3.tsv("data/BreastOutput2.csv", function(error, data2) {
-    var cell = svg.selectAll(".cell")
-      .each(plot2);
 
-    function plot2(p) {
+   svg.append("text")
+      .attr("class", "textNotification")
+      .attr("x", padding)
+      .attr("y", padding)
+      .text("Finished reading data points");
+          
+
+  // Reading Scagnostics data ***********************************************************
+  // ********************************************************************************  
+  d3.tsv("data/BreastOutput2.csv", function(error, data2) {
+    svg.append("text")
+      .attr("class", "textNotification")
+      .attr("x", padding)
+      .attr("y", padding+14)
+      .text("Finished reading Scagnostics");
+
+
+   var leaderList = leaderAlgorithm(traits, disSim);
+   var varList = cross(traits);
+   splom(svg, varList);
+
+    // splom function ****************************
+    function splom(svg_, varList) {
+      var cell = svg_.selectAll(".cell")
+        .data(varList)
+        .enter().append("g")
+        .attr("class", "cell")
+        .attr("transform", function(d) { return "translate(" + (d.i) * size + "," + d.j * size + ")"; })
+        .each(plot);
+
+      // Titles for the diagonal.
+      cell.filter(function(d) { return d.i === d.j; }).append("text")
+          .attr("class", "varText")
+          .attr("x", padding)
+          .attr("y", size*0.8)
+          .text(function(d,i) { return d.x; });
+      cell.call(brush);   
+    }  
+    
+
+    // Plot function ****************************
+    function plot(p) {
+      if ((p.i>32 || p.j>32 || p.i==p.j))
+        return;
+      var cell = d3.select(this);
+
+      x.domain(domainByTrait);
+      y.domain(domainByTrait);
+
+      cell.append("rect")
+          .attr("class", "frame")
+          .attr("x", padding / 2)
+          .attr("y", padding / 2)
+          .attr("width", size - padding)
+          .attr("height", size - padding)
+          .style("fill", function(d) { 
+              if (p.i<p.j){
+                 var k = p.mj*(p.mj-1)/2+p.mi; 
+                 return colorRedBlue(data2[k]["Monotonic"]);
+              }
+              else if (p.i>p.j){
+                var k = p.mi*(p.mi-1)/2+p.mj; 
+                return colorRedBlue(data2[k]["Monotonic"]);
+              }
+              else{
+                return "#fff";
+              }
+          });
+      cell.selectAll("circle")
+          .data(data)
+        .enter().append("circle")
+          .attr("cx", function(d) { return x(d[p.x]); })
+          .attr("cy", function(d) { return y(d[p.y]); })
+          .attr("r", size/30)
+          .style("fill", "#000");  
+    } // End plot functiong
+    
+    function cross(arr) {
+      var c = [], n = leaderList.length, i, j;
+      for (i = 0; i < n; i++) 
+        for (j = 0; j < n; j++) {
+          var miLeader = leaderList[i].mi;
+          var mjLeader = leaderList[j].mi;
+
+          c.push({x: arr[miLeader], i: i, y: arr[mjLeader], j: j, mi: miLeader, mj: mjLeader});
+        }
+      return c;
+    }
+
+
+    function disSim(mi, mj){
+      if (mi<mj){
+         var k = mj*(mj-1)/2+mi; 
+         return 1-data2[k]["Monotonic"];
+      }
+      else if (mi>mj){
+        var k = mi*(mi-1)/2+mj; 
+        return 1-data2[k]["Monotonic"];
+      }
+      else{
+        return 0; // Monotonic==1 if same variable for x and y
+      }
+    }  
+
+    // Implementation of leader algorithm
+    // arr: input variables
+    // sim: similarity funciton
+    function leaderAlgorithm(arr, disSim){
+      var r = 0.5;
+      var leaderList = [];
+      for (var i=0; i< arr.length; i++){
+        var minDis = 10000;
+        var minIndex = -1;
+        // Finding the leader
+        for (var l=0; l< leaderList.length; l++){
+          var dis = disSim(i,leaderList[l].mi);
+          if (dis<minDis){
+            minDis=dis;
+            minIndex = l;
+          }
+        }  
+        // Checking 
+        if (minIndex>=0 && minDis<r){   // If found a leader (with minDis)
+          var oldLeader = leaderList[minIndex];
+          oldLeader.children.push(i);
+        }
+        else{
+          var newLeader = {};
+          newLeader.mi = i;
+          newLeader.children = []; 
+          leaderList.push(newLeader);
+        }  
+      }
+      return leaderList;
+    }
+
+    //var cell = svg.selectAll(".cell")
+    //  .each(plot2);
+
+    // Plot2 function ****************************
+    /*function plot2(p) {
       var cell = d3.select(this);
       cell.selectAll(".frame").attr("fill", function(d){
         if (p.i<p.j){
-          //   console.log(i+" "+j +" "+k+" "+data2[k]["Monotonic"]);
-           var k = p.j*(p.j-1)/2+p.i; 
+           var k = p.mj*(p.mj-1)/2+p.mi; 
            return colorRedBlue(data2[k]["Monotonic"]);
         }
         else if (p.i>p.j){
-          var k = p.i*(p.i-1)/2+p.j; 
+          var k = p.mi*(p.mi-1)/2+p.mj; 
           return colorRedBlue(data2[k]["Monotonic"]);
         }
         else{
           return "#fff";
         }
       })
-    }
+    }*/
   });  
 
 
+ 
 
 
-  var brushCell;
 
+
+// *************************BRUSHING **********************************
+ var brushCell;
   // Clear the previously-active brush, if any.
   function brushstart(p) {
     if (brushCell !== this) {
@@ -203,8 +277,6 @@ d3.tsv("data/BreastStandardized.csv", function(error, data) {
       brushCell = this;
     }
   }
-
-
   // Highlight the selected circles.
   function brushmove(p) {
     var e = brush.extent();
@@ -213,55 +285,10 @@ d3.tsv("data/BreastStandardized.csv", function(error, data) {
           || e[0][1] > d[p.y] || d[p.y] > e[1][1];
     });
   }
-
   // If the brush is empty, select all circles.
   function brushend() {
     if (brush.empty()) svg.selectAll(".hidden").classed("hidden", false);
   }
 });
-
-/*
-function cross(arr) {
-  var c = [], n = arr.length, i, j;
-  for (i = 0; i < n; i++) 
-    for (j = 0; j < n; j++) 
-      c.push({x: arr[i], i: i, y: arr[j], j: j});
-  return c;
-}*/
-
-function cross(arr) {
-  var arr2 = [];
-  for (var i=0; i < arr.length;i=i+4){
-    arr2.push(arr[i]);
-  }
-  leaderAlgorithm (arr2);
-//debugger;
-  var c = [], n = arr2.length, i, j;
-  for (i = 0; i < n; i++) 
-    for (j = 0; j < n; j++) 
-      c.push({x: arr2[i], i: i, y: arr2[j], j: j});
-  return c;
-}
-
-
-// Implementation of leader algorithm
-// arr: input variables
-// sim: similarity funciton
-function leaderAlgorithm(arr2, sim){
-  // Reset the input array
-  
-  var arr3 = [];
-  for (var i=0; i<arr2.length;i++){
-  //   arr2[i] = "var "+i;
-  }
-  
-  var list = [];
-  var leader = arr2[0];
-  list.push(leader);
-  //for ()
-
- 
-}
-
 </script>
 </body>
