@@ -133,8 +133,14 @@ d3.tsv("data/BreastStandardized.csv", function(error, data) {
         .each(plot);
 
       // Titles for the diagonal.
-      
+      cell.filter(function(d) { return d.i === d.j; }).append("text")
+          .attr("class", "varText")
+          .attr("x", padding)
+          .attr("y", size*0.8)
+          .text(function(d,i) { return d.x; });
+      cell.call(brush);   
 
+      
     }  
 
     // Plot function *******************************
