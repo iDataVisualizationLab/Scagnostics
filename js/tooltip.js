@@ -15,13 +15,10 @@ var colorHighlight = "#fc8";
 var buttonColor = "#ddd";
 var cellHeight = 14;
 
-
 var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-(tipSVGheight),-tipWidth/2])
   .style('border', '1px solid #555');
-
-
 
 function showTip(d) { 
   tip.html(function(d) {
@@ -47,10 +44,7 @@ function showTip(d) {
 
   var varList = cross2(d);
   splom(tip_svg, varList);  
-  
 }     
-
-
 
 function cross2(d) {
   var c = [];
@@ -94,7 +88,6 @@ function splom(svg_, varList) {
         //tip.hide(d); 
      //   removeTimeArcs();
       });
-
   // Brushing    
   //  cell.call(brush);   
 }  
