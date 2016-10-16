@@ -1,4 +1,4 @@
 # Scagnostics
 
 
-![ScreenShot](https://github.com/iDataVisualizationLab/NetworkClustering/blob/master/figures/text_100.png)
+![ScreenShot](https://github.com/iDataVisualizationLab/Scagnostics/blob/master/figures/fig1.png)
