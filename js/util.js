@@ -1,5 +1,5 @@
 /* 2016 
- * Tuan Dang (on the BioLinker project, as Postdoc for EVL, UIC)
+ * Tommy Dang (on the Scagnostics project, as Assistant professor, iDVL@TTU)
  *
  * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR IMPLIED
  * WARRANTY.  IN PARTICULAR, THE AUTHORS MAKE NO REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY

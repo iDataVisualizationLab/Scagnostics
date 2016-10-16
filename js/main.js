@@ -1,3 +1,11 @@
+/* 2016 
+ * Tommy Dang (on the Scagnostics project, as Assistant professor, iDVL@TTU)
+ *
+ * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR IMPLIED
+ * WARRANTY.  IN PARTICULAR, THE AUTHORS MAKE NO REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY
+ * OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
+ */
+
 var width = 1200,
     size = 80,
     padding = size/20;
@@ -35,25 +43,23 @@ d3.tsv("data/BreastStandardized.csv", function(error, data_) {
   var n = traits.length;
 
   var brush = d3.svg.brush()
-      .x(x)
-      .y(y)
-      .on("brushstart", brushstart)
-      .on("brush", brushmove)
-      .on("brushend", brushend);
+    .x(x)
+    .y(y)
+    .on("brushstart", brushstart)
+    .on("brush", brushmove)
+    .on("brushend", brushend);
 
   var svg = d3.select("body").append("svg")
-      .attr("width", size * n + padding)
-      .attr("height", size * n + padding)
-      .append("g")
-        .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
+    .attr("width", size * n + padding)
+    .attr("height", size * n + padding)
+    .append("g")
+    .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
 
-  
-
-   svg.append("text")
-      .attr("class", "textNotification")
-      .attr("x", padding)
-      .attr("y", padding)
-      .text("Finished reading data points");
+  svg.append("text")
+    .attr("class", "textNotification")
+    .attr("x", padding)
+    .attr("y", padding)
+    .text("Finished reading data points");
    
     svg.call(tip);       
 
