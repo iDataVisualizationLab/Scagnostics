@@ -6,8 +6,8 @@
  * OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
  */
 
-var tipWidth = 470;
-var tipSVGheight = 370;
+var tipWidth = 400;
+var tipSVGheight = 400;
 var tip_svg;
 var y_svg;
 
@@ -17,7 +17,7 @@ var cellHeight = 14;
 
 var tip = d3.tip()
   .attr('class', 'd3-tip')
-  .offset([-(tipSVGheight),-tipWidth/2])
+  .offset([-(tipSVGheight),0])
   .style('border', '1px solid #555');
 
 function showTip(d) { 
@@ -39,7 +39,7 @@ function showTip(d) {
     .style("font-size", "12px")
     .style("font-weight", "bold")
     .style("text-anchor", "start")
-    .text("Protein data")
+    .text("Cluster view")
     .style("fill", "#000");
 
   var varList = cross2(d);

@@ -7,7 +7,7 @@
  */
 
 var width = 1200,
-    size = 80,
+    size = 60,
     padding = size/20;
 
 var x = d3.scale.linear()
