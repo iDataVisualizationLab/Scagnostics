@@ -17,6 +17,7 @@ function brushstart(p) {
     brushCell = this;
   }
 }
+
 // Highlight the selected circles.
 function brushmove(p) {
   var e = brush.extent();
@@ -25,6 +26,7 @@ function brushmove(p) {
         || e[0][1] > d[p.y] || d[p.y] > e[1][1];
   });
 }
+
 // If the brush is empty, select all circles.
 function brushend() {
   if (brush.empty()) svg.selectAll(".hidden").classed("hidden", false);
