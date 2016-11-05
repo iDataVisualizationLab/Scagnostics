@@ -86,7 +86,6 @@ function splom(svg_, varList) {
       })
       .on('mouseout', function(d) {
         //tip.hide(d); 
-     //   removeTimeArcs();
       });
   // Brushing    
   //  cell.call(brush);   

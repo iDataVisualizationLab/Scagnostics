@@ -58,7 +58,7 @@ d3.tsv("data/BreastStandardized.csv", function(error, data_) {
   svg.append("text")
     .attr("class", "textNotification")
     .attr("x", padding)
-    .attr("y", padding)
+    .attr("y", 0)
     .text("Finished reading data points");
    
     svg.call(tip);       
@@ -69,7 +69,7 @@ d3.tsv("data/BreastStandardized.csv", function(error, data_) {
     svg.append("text")
       .attr("class", "textNotification")
       .attr("x", padding)
-      .attr("y", padding+14)
+      .attr("y", 12)
       .text("Finished reading Scagnostics");
 
 
