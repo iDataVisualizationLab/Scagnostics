@@ -7,7 +7,7 @@
  */
 
 var width = 1200,
-    size = 60,
+    size = 50,
     padding = size/20;
 
 var x = d3.scale.linear()
@@ -27,8 +27,8 @@ var color = d3.scale.category10();
 //******************************
 var domainByTrait= ["0.0", "1.0"];
 var colorRedBlue = d3.scale.linear()
-    .domain([0, 0.4, 1])
-    .range(["#55f", "white", "red"]);
+    .domain([0, 0.5, 1])
+    .range(["#00f", "white", "#f00"]);
 var leaderList;
 var traits;    
 var data, dataS;    
@@ -74,13 +74,13 @@ d3.tsv("data/BreastStandardized.csv", function(error, data_) {
 
 
     leaderList = leaderAlgorithm(traits, disSim);
-    var varList = cross();
-    splom(svg, varList);
+    var pairList = cross();
+    splomMain(svg, pairList, leaderList);
 
     function cross() {
       var c = [], n = leaderList.length, i, j;
       for (i = 0; i < n; i++) 
-        for (j = 0; j < n; j++) {
+        for (j = i+1; j < n; j++) {
           var miLeader = leaderList[i].mi;
           var mjLeader = leaderList[j].mi;
           c.push({x: traits[miLeader], i: i, y: traits[mjLeader], j: j,
