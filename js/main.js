@@ -8,12 +8,17 @@
 
 var width = 1200,
     size = 50,
-    padding = size/20;
+    padding = size/12;
 
 var x = d3.scale.linear()
     .range([padding , size - padding]);
 var y = d3.scale.linear()
     .range([size - padding , padding ]);
+
+var domainByTrait= ["0.0", "1.0"];
+x.domain(domainByTrait);
+y.domain(domainByTrait);
+
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
@@ -25,20 +30,22 @@ var yAxis = d3.svg.axis()
 var color = d3.scale.category10();
 
 //******************************
-var domainByTrait= ["0.0", "1.0"];
+
 var colorRedBlue = d3.scale.linear()
     .domain([0, 0.5, 1])
     .range(["#00f", "white", "#f00"]);
 var leaderList;
 var traits;    
 var data, dataS;    
+var svg;
 
 
-//d3.tsv("data/SonarStandardized.csv", function(error, data) {
-d3.tsv("data/BreastStandardized.csv", function(error, data_) {
+//d3.tsv("data/SonarStandardized.csv", function(error, data_) {
+//d3.tsv("data/BreastStandardized.csv", function(error, data_) {
+  d3.tsv("data/NRCStandardized.csv", function(error, data_) {
   if (error) throw error;
 
-  data = data_
+  data = data_;
   traits = d3.keys(data[0]).filter(function(d) { return d !== ""; });
   var n = traits.length;
 
@@ -49,7 +56,7 @@ d3.tsv("data/BreastStandardized.csv", function(error, data_) {
     .on("brush", brushmove)
     .on("brushend", brushend);
 
-  var svg = d3.select("body").append("svg")
+  svg = d3.select("body").append("svg")
     .attr("width", size * n + padding)
     .attr("height", size * n + padding)
     .append("g")
@@ -64,7 +71,9 @@ d3.tsv("data/BreastStandardized.csv", function(error, data_) {
     svg.call(tip);       
 
   // Reading Scagnostics data ***********************************************************
-  d3.tsv("data/BreastOutput2.csv", function(error, data2) {
+  //d3.tsv("data/BreastOutput2.csv", function(error, data2) {
+  //d3.tsv("data/SonarOutput2.csv", function(error, data2) {
+  d3.tsv("data/NRCOutput2.csv", function(error, data2) {
     dataS = data2;
     svg.append("text")
       .attr("class", "textNotification")
@@ -89,7 +98,7 @@ d3.tsv("data/BreastStandardized.csv", function(error, data_) {
       return c;
     }
 
-    function disSim(mi, mj){
+    function disSimMonotonic(mi, mj){
       if (mi<mj){
          var k = mj*(mj-1)/2+mi; 
          return 1-dataS[k]["Monotonic"];
@@ -103,18 +112,47 @@ d3.tsv("data/BreastStandardized.csv", function(error, data_) {
       }
     }  
 
+    function disSim(mi, mj){
+      var dif=0;
+      for (var i=0; i<n; i++){
+        if (i==mi || i==mj) continue;
+        var indexI = getIndex(i,mi);
+        var indexJ = getIndex(i,mj);
+        
+        dif += Math.abs(dataS[indexI]["Outlying"]-dataS[indexJ]["Outlying"]);
+        dif += Math.abs(dataS[indexI]["Skewed"]-dataS[indexJ]["Skewed"]);
+        dif += Math.abs(dataS[indexI]["Clumpy"]-dataS[indexJ]["Clumpy"]);
+        dif += Math.abs(dataS[indexI]["Sparse"]-dataS[indexJ]["Sparse"]);
+        dif += Math.abs(dataS[indexI]["Striated"]-dataS[indexJ]["Striated"]);
+        dif += Math.abs(dataS[indexI]["Convex"]-dataS[indexJ]["Convex"]);
+        dif += Math.abs(dataS[indexI]["Skinny"]-dataS[indexJ]["Skinny"]);
+        dif += Math.abs(dataS[indexI]["Stringy"]-dataS[indexJ]["Stringy"]);
+        dif += Math.abs(dataS[indexI]["Monotonic"]-dataS[indexJ]["Monotonic"]);       
+      }
+      return dif/(n-2);
+      //console.log(dif);
+    }  
+    function getIndex(mi, mj){
+      if (mi<mj){
+        return mj*(mj-1)/2+mi; 
+      }
+      else if (mi>mj){
+        return mi*(mi-1)/2+mj; 
+      }
+    }    
+
     // Implementation of leader algorithm
     // arr: input variables
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
-      var r = 0.5;
+      var r = 0.4;
       var leaderList = [];
       for (var i=0; i< arr.length; i++){
         var minDis = 10000;
         var minIndex = -1;
         // Finding the leader
         for (var l=0; l< leaderList.length; l++){
-          var dis = disSim(i,leaderList[l].mi);
+          var dis = disSimMonotonic(i,leaderList[l].mi);
           if (dis<minDis){
             minDis=dis;
             minIndex = l;

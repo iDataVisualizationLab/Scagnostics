@@ -6,6 +6,14 @@ svg {
   font: 10px sans-serif;
   padding: 10px;
 }
+
+path { 
+    stroke: #0a0;
+    stroke-width: 1;
+    stroke-opacity: 0.75;
+    fill: none;
+}
+
 .axis,
 .frame {
   shape-rendering: crispEdges;
@@ -20,19 +28,18 @@ svg {
 
 text {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
   text-transform: capitalize;
 }
 
 .cell text {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
   text-transform: capitalize;
 }
 
 .frame {
   stroke: #444;
-  stroke-width: ;
 }
 circle {
   fill-opacity: .8;
@@ -50,7 +57,7 @@ circle.hidden {
 .d3-tip {
   line-height: 1;
   padding: 10px;
-  font-size: 14px;
+  font-size: 13px;
   font-family: "sans-serif";
   background: rgba(204, 204, 204, 0.96);
   color: #000;
@@ -77,8 +84,29 @@ circle.hidden {
   left: 0;
 }
 
+#controlPanel {
+  position:absolute;
+  z-index: 0;
+  top: 11px;
+  left: 800px;
+  border: 1px solid rgba(0,0,0, 0.3);
+  background-color: rgba(0,0,0, 0.15);
+}
+
 </style>
 <body>
+<div id="controlPanel"  class="controlPanel">
+<input type="checkbox" id="checkbox1"  onclick="toggleScore()" >
+<label for="checkbox1" >Show monotonic scores </label><br><br>
+<input type="radio" id="radio1" name="radio1" onclick="" > All scatterplots in cluster<br>
+<input type="radio" id="radio2" name="radio1" onclick="" checked> Linked scatterplot<br>
+<input type="radio" id="radio3" name="radio1" onclick=""> Summary scatterplot  <br>
+
+
+ </label> 
+
+</div>
+
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script src="js/tooltip.js"></script>
