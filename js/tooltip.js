@@ -5,11 +5,11 @@
  * WARRANTY.  IN PARTICULAR, THE AUTHORS MAKE NO REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY
  * OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
  */
-
-var tipWidth = 350;
-var tipSVGheight = 350;
 var tip_svg;
 var y_svg;
+var bH = 19;
+var linkedPairList;   // save pair to show linked scatterplot on mouse over
+var linkedIndex = 0;  // first index of the green curve
 
 var colorHighlight = "#fc8";
 var buttonColor = "#ddd";
@@ -17,14 +17,16 @@ var cellHeight = 14;
 
 var tip = d3.tip()
   .attr('class', 'd3-tip')
-  .offset([-(tipSVGheight),0])
+  .offset([0,0])
   .style('border', '1px solid #555');
 
+var selectedPlot = -100;
 // Define the line
 var valueline = d3.svg.line()
     .x(function(d) { return d.x; })
     .y(function(d) { return d.y; })
-    .interpolate("basis");
+    .interpolate("monotone");
+    //.interpolate("cardinal");
 
 function showTip(d) { 
   tip.html(function(d) {
@@ -44,6 +46,8 @@ function showTip(d) {
     .style("fill", "#000");
   */  
 
+  var tipW = 0;
+  var tipH = 0;
   if (document.getElementById("radio1").checked){
     if (d.children) {  // diagonal varable names in the second matrix
       var pairList = cross2(d);
@@ -51,11 +55,12 @@ function showTip(d) {
       d.children.forEach(function (d2){
         varList.push(d2);
       });
-
       tip.offset([-(varList.length-1)*size-20,20])
+      tipW = varList.length*size;
+      tipH = (varList.length)*size;
       tip_svg = d3.select('.d3-tip').append('svg')
-        .attr("width", varList.length*size)
-        .attr("height", (varList.length-1)*size);
+        .attr("width", tipW)
+        .attr("height", tipH);
       
       splom2(tip_svg, pairList, varList);  
     }
@@ -71,24 +76,112 @@ function showTip(d) {
       });
       
       tip.offset([-(varList2.length)*size-20,20])
+      tipW = (varList1.length+1)*size;
+      tipH = (varList2.length+1)*size;
       tip_svg = d3.select('.d3-tip').append('svg')
-        .attr("width", (varList1.length+1)*size)
-        .attr("height", (varList2.length)*size);
+        .attr("width", tipW)
+        .attr("height", tipH);
       
       splom3(tip_svg, pairList, varList1, varList2);  
     }
   }
   else if (document.getElementById("radio2").checked){
-    var plotSize = 300;
+    var plotSize = 360;
+    var padding = 60;  
     tip.offset([0,100])
+    tipW = plotSize+padding;
+    tipH = plotSize+padding;
     tip_svg = d3.select('.d3-tip').append('svg')
-      .attr("width", plotSize+40)
-      .attr("height", plotSize+40);    
+      .attr("width", tipW)
+      .attr("height", tipH);    
 
-    linkedScatterplot(tip_svg, plotSize, d);
+    var x = d3.scale.linear()
+      .range([padding+30, plotSize+padding-30]);
+    var y = d3.scale.linear()
+        .range([plotSize+padding-30, padding+30]);
+    x.domain(domainByTrait);
+    y.domain(domainByTrait);
+    linkedScatterplot(tip_svg, plotSize, d, x, y, padding);
+
+    // Next button
+    tip_svg.append("rect")
+      .attr("class", "buttonNext")
+      .attr("x", tipW-150)
+      .attr("y", -5)
+      .attr("width", 50)
+      .attr("height", bH)
+      .style("stroke-width", 0.5)
+      .style("stroke", "#000")
+      .style("fill", function(d) { return "#aaa" })
+      .on('mouseover',mouseoverButtonNext)
+      .on('mouseout',mouseoutButtonNext)
+      .on('click',mouseClickButtonNext);
+    tip_svg.append("text")
+        .attr("class", "buttonNextText")
+        .attr("x", tipW-142)
+        .attr("y", 9)
+        .style("fill","#000")
+        .text("Next")
+        .on('mouseover',mouseoverButtonNext)
+        .on('mouseout',mouseoutButtonNext)
+        .on('click',mouseClickButtonNext);
+    function mouseoverButtonNext(d){
+      tip_svg.selectAll(".buttonNext")
+        .style("fill", "#f50"); 
+    }
+    function mouseoutButtonNext(d){
+      tip_svg.selectAll(".buttonNext")
+        .style("fill", "#aaa"); 
+    }
+    function mouseClickButtonNext(d){
+      linkedIndex++;
+      if (linkedIndex==linkedPairList.length)
+        linkedIndex=0;
+      tip_svg.selectAll(".circleLinked").transition().duration(1000)
+        .attr("cx", function(d) { return x(d[linkedPairList[linkedIndex].x]); })
+        .attr("cy", function(d) { return y(d[linkedPairList[linkedIndex].y]); });   
+    }
   }  
-  else if (document.getElementById("radio3").checked){
-  }  
+
+    
+  tip_svg.append("rect")
+    .attr("class", "buttonClose")
+    .attr("x", tipW-50)
+    .attr("y", -5)
+    .attr("width", 50)
+    .attr("height", bH)
+    .style("stroke-width", 0.5)
+    .style("stroke", "#000")
+    .style("fill", function(d) { return "#aaa" })
+    .on('mouseover',mouseoverButtonClose)
+    .on('mouseout',mouseoutButtonClose)
+    .on('click',mouseClickButtonClose);
+  tip_svg.append("text")
+      .attr("class", "buttonCloseText")
+      .attr("x", tipW-42)
+      .attr("y", 9)
+      .style("fill","#000")
+      .text("Close")
+      .on('mouseover',mouseoverButtonClose)
+      .on('mouseout',mouseoutButtonClose)
+      .on('click',mouseClickButtonClose);
+  function mouseoverButtonClose(d){
+    tip_svg.selectAll(".buttonClose")
+      .style("fill", "#f50"); 
+  }
+  function mouseoutButtonClose(d){
+    tip_svg.selectAll(".buttonClose")
+      .style("fill", "#aaa"); 
+  }
+  function mouseClickButtonClose(d){
+    svg.selectAll(".varText")
+      .style("fill", "#000"); 
+    svg.selectAll(".frame")
+      .style("stroke", "#000"); 
+    selectedPlot = -100;
+    linkedIndex = 0;
+    tip.hide();  
+  }
 }    
 
 
@@ -128,14 +221,22 @@ function cross3(d) {
 
 // splom function ****************************
 function splomMain(svg_, pairList, varList) {
-  var cell = svg_.selectAll(".cell")
+  svg_.selectAll(".cellMain")
     .data(pairList).enter()
     .append("g")
-      .attr("class", "cell")
+      .attr("class", "cellMain")
       .attr("transform", function(d) { return "translate(" + (d.i) * size + "," + d.j * size + ")"; })
       .each(plot)
       .on('mouseover', function(d) {
-        showTip(d); 
+        if (selectedPlot<-1){
+          showTip(d); 
+        }
+      })
+      .on('click', function(d){
+        selectedPlot = getIndex(d.mi,d.mj);
+        svg_.selectAll(".frame")
+          .style("stroke", function(d2) { 
+            return (d==d2) ? "#bb0" : "#000"; });   
       }); 
   // Titles for the diagonal.
   svg_.selectAll(".varText")
@@ -145,9 +246,14 @@ function splomMain(svg_, pairList, varList) {
       .attr("x", function(d,i){ return i * size; })
       .attr("y", function(d,i){ return (i+0.8) * size; })
       .text(function(d,i) { return traits[d.mi] + " ("+(d.children.length+1)+")"; })
-      .on('mouseover', function(d) {showTip(d); })
-      .on('mouseout', function(d) {
-        //tip.hide(d); 
+      .on('mouseover', function(d) {
+        if (selectedPlot<-1)
+          showTip(d); 
+      })
+      .on('click', function(d) {
+        selectedPlot = -1;
+        svg_.selectAll(".varText")
+          .style("fill", function(d2) { return d==d2 ? "#bb0" : "#000"; });   
       });
     // Brushing    
     //  cell.call(brush); 
@@ -158,15 +264,15 @@ function splom2(svg_, pairList, varList) {
     .data(pairList).enter()
     .append("g")
       .attr("class", "cell")
-      .attr("transform", function(d) { return "translate(" + d.i * size + "," + ((d.j-1) * size+3) + ")"; })
+      .attr("transform", function(d) { return "translate(" + d.i * size + "," + ((d.j) * size+3) + ")"; })
       .each(plot);
   
-  svg_.selectAll(".varText") 
+  svg_.selectAll(".varText2") 
     .data(varList).enter()
     .append("text")
-      .attr("class", "varText")
+      .attr("class", "varText2")
       .attr("x", function(d,i){ return i * size;  })
-      .attr("y", function(d,i){ return (i) * size; })
+      .attr("y", function(d,i){ return (i+1) * size; })
       .text(function(d,i) { return traits[d]; });
 }  
 
@@ -175,13 +281,13 @@ function splom3(svg_, pairList, varList1, varList2) {
     .data(pairList).enter()
     .append("g")
       .attr("class", "cell")
-      .attr("transform", function(d) { return "translate(" + (d.i+1) * size + "," + (d.j * size +10) + ")"; })
+      .attr("transform", function(d) { return "translate(" + (d.i+1) * size + "," + ((d.j+1) * size) + ")"; })
       .each(plot); 
 
-  svg_.selectAll(".varText") 
+  svg_.selectAll(".varText3") 
     .data(varList1).enter()
     .append("g").attr("transform", function(d,i) {
-      return "translate(" +(i+1) * size + "," + 10 + ")"+ " rotate(-15)" 
+      return "translate(" +(i+1) * size + "," + size + ")"+ " rotate(-15)" 
     })
     .append("text")
       .attr("class", "varText3")
@@ -191,7 +297,7 @@ function splom3(svg_, pairList, varList1, varList2) {
   svg_.selectAll(".varText4") 
     .data(varList2).enter()
     .append("g").attr("transform", function(d,i) {
-      return "translate(" +(size-2)+ "," + (i+1)*size + ")"
+      return "translate(" +(size-2)+ "," + (i+1.8)*size + ")"
     })
     .append("text")
       .style("text-anchor", "end")
@@ -275,16 +381,7 @@ function toggleScore() {
 
 }  
 
-function linkedScatterplot(svg_, plotSize, d) {
-  var padding = 40;  
-  var x = d3.scale.linear()
-    .range([padding+10, plotSize+padding-10]);
-  var y = d3.scale.linear()
-      .range([plotSize+padding-10, padding+10]);
-
-  x.domain(domainByTrait);
-  y.domain(domainByTrait);
-
+function linkedScatterplot(svg_, plotSize, d, x, y, padding) {
   var pairList; 
   if (d.children) {  // diagonal varable names in the second matrix
     pairList = cross2(d);      
@@ -292,6 +389,7 @@ function linkedScatterplot(svg_, plotSize, d) {
   else{
     pairList = cross3(d);
   }
+  
   if (pairList.length==0) return;  // No scatterplot (1 variable in the cluster)
   var p=-1;
   var sumS = 0;
@@ -306,8 +404,7 @@ function linkedScatterplot(svg_, plotSize, d) {
     }
     sumS +=+dataS[k]["Monotonic"];
   }
-  //console.log("sumS="+(sumS/pairList.length));
-
+  
   svg_.append("rect")
     .attr("class", "frame2")
     .attr("x",padding)
@@ -322,28 +419,77 @@ function linkedScatterplot(svg_, plotSize, d) {
         return "#fff";  
     });   
 
+  var a = [];
+  for (var i=0;i<pairList.length;i++){
+    var obj ={};
+    obj.val = pairList[i];  
+    obj.x = pairList[i].x;
+    obj.y = pairList[i].y; 
+    a.push(obj);
+  }    
+  // Order the array
+  var b = [a[a.length-1]];
+  a[a.length-1].isUsed = true;
+  while (b.length<a.length){
+    var index = b.length-1;
+    var shortestIndex = shortestDistance(b[index],a);
+    b.push(a[shortestIndex]);
+    a[shortestIndex].isUsed = true;
+  }
+  function shortestDistance(p1, a){
+    var shortest = data.length*10000; // max value
+    var shortestIndex = -1;
+    for (var i=0;i<a.length;i++){
+      if (a[i].isUsed == true) continue;
+      var dis = distance(p1, a[i]);
+      if (dis<shortest){
+        shortest = dis;
+        shortestIndex = i;
+      }
+    }
+    return shortestIndex;
+  }
+   
+  function distance(p1,p2){
+    var sum=0;
+    for (var i=0;i<data.length;i++){
+      var x1 = x(data[i][p1.x]);
+      var y1 = y(data[i][p1.y]);
+      var x2 = x(data[i][p2.x]);
+      var y2 = y(data[i][p2.y]);
+      sum += Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+    }
+    return sum;
+  }
 
+
+  linkedPairList = [];
+  for (var i=0;i<b.length;i++){
+    linkedPairList.push(b[i].val);
+  }  
+ 
   svg_.selectAll(".line")
       .data(data)
     .enter().append("path")
         .attr("class", "line")
         .attr("d", function(d) {
-          var a = [];
-          for (var i=0;i<pairList.length;i++){
-            p=pairList[i];
+          var c = [];
+          for (var i=0;i<linkedPairList.length;i++){
+            p=linkedPairList[i];
             var obj ={};
             obj.x = x(d[p.x]);
             obj.y = y(d[p.y]);
-            a.push(obj);
+            c.push(obj);
           }  
-          return valueline(a);
+          return valueline(c);
         }); 
 
-  svg_.selectAll("circle")
+  svg_.selectAll("circleLinked")
       .data(data)
     .enter().append("circle")
-      .attr("cx", function(d) { return x(d[p.x]); })
-      .attr("cy", function(d) { return y(d[p.y]); })
+      .attr("class", "circleLinked")
+      .attr("cx", function(d) { return x(d[linkedPairList[linkedIndex].x]); })
+      .attr("cy", function(d) { return y(d[linkedPairList[linkedIndex].y]); })
       .attr("r", plotSize/80)
       .style("fill", "#000");   
 

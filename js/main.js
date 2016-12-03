@@ -40,9 +40,9 @@ var data, dataS;
 var svg;
 
 
+d3.tsv("data/BreastStandardized.csv", function(error, data_) {
 //d3.tsv("data/SonarStandardized.csv", function(error, data_) {
-//d3.tsv("data/BreastStandardized.csv", function(error, data_) {
-  d3.tsv("data/NRCStandardized.csv", function(error, data_) {
+//  d3.tsv("data/NRCStandardized.csv", function(error, data_) {
   if (error) throw error;
 
   data = data_;
@@ -71,9 +71,9 @@ var svg;
     svg.call(tip);       
 
   // Reading Scagnostics data ***********************************************************
-  //d3.tsv("data/BreastOutput2.csv", function(error, data2) {
+  d3.tsv("data/BreastOutput2.csv", function(error, data2) {
   //d3.tsv("data/SonarOutput2.csv", function(error, data2) {
-  d3.tsv("data/NRCOutput2.csv", function(error, data2) {
+  //d3.tsv("data/NRCOutput2.csv", function(error, data2) {
     dataS = data2;
     svg.append("text")
       .attr("class", "textNotification")
@@ -132,27 +132,19 @@ var svg;
       return dif/(n-2);
       //console.log(dif);
     }  
-    function getIndex(mi, mj){
-      if (mi<mj){
-        return mj*(mj-1)/2+mi; 
-      }
-      else if (mi>mj){
-        return mi*(mi-1)/2+mj; 
-      }
-    }    
-
+    
     // Implementation of leader algorithm
     // arr: input variables
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
-      var r = 0.4;
+      var r = 0.65;
       var leaderList = [];
       for (var i=0; i< arr.length; i++){
         var minDis = 10000;
         var minIndex = -1;
         // Finding the leader
         for (var l=0; l< leaderList.length; l++){
-          var dis = disSimMonotonic(i,leaderList[l].mi);
+          var dis = disSim(i,leaderList[l].mi);
           if (dis<minDis){
             minDis=dis;
             minIndex = l;

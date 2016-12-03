@@ -31,3 +31,12 @@ function brushmove(p) {
 function brushend() {
   if (brush.empty()) svg.selectAll(".hidden").classed("hidden", false);
 }
+
+function getIndex(mi, mj){
+  if (mi<mj){
+    return mj*(mj-1)/2+mi; 
+  }
+  else if (mi>mj){
+    return mi*(mi-1)/2+mj; 
+  }
+}    
