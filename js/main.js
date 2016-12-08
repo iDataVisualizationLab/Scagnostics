@@ -7,7 +7,7 @@
  */
 
 var width = 1200,
-    size = 50,
+    size = 350,
     padding = size/12;
 
 var x = d3.scale.linear()
@@ -39,10 +39,16 @@ var traits;
 var data, dataS;    
 var svg;
 
+//var file = "data/Breast";
+//var file = "data/Sonar";
+var file = "data/NRC";      // This is the data for Figure 6 in the paper
+//var file = "data/Subway3";
 
-d3.tsv("data/BreastStandardized.csv", function(error, data_) {
-//d3.tsv("data/SonarStandardized.csv", function(error, data_) {
-//  d3.tsv("data/NRCStandardized.csv", function(error, data_) {
+//var file = "data2/MLB2008"; 
+//var file = "data2/2016";  // Sample data of 3 variables for Figure 5 in the paper
+
+//  d3.tsv("data/Subway3Standardized.csv", function(error, data_) {
+d3.tsv(file+"Standardized.csv", function(error, data_) {
   if (error) throw error;
 
   data = data_;
@@ -71,20 +77,138 @@ d3.tsv("data/BreastStandardized.csv", function(error, data_) {
     svg.call(tip);       
 
   // Reading Scagnostics data ***********************************************************
-  d3.tsv("data/BreastOutput2.csv", function(error, data2) {
-  //d3.tsv("data/SonarOutput2.csv", function(error, data2) {
-  //d3.tsv("data/NRCOutput2.csv", function(error, data2) {
+   d3.tsv(file+"Output2.csv", function(error, data2) {
     dataS = data2;
-    svg.append("text")
-      .attr("class", "textNotification")
-      .attr("x", padding)
-      .attr("y", 12)
-      .text("Finished reading Scagnostics");
 
 
-    leaderList = leaderAlgorithm(traits, disSim);
+    var standard = gaussian(0.5, 0.2);
+
+
+    function gaussian(mean, stdev) {
+        var y2;
+        var use_last = false;
+        return function() {
+            var y1;
+            if(use_last) {
+               y1 = y2;
+               use_last = false;
+            }
+            else {
+                var x1, x2, w;
+                do {
+                     x1 = 2.0 * Math.random() - 1.0;
+                     x2 = 2.0 * Math.random() - 1.0;
+                     w  = x1 * x1 + x2 * x2;               
+                } while( w >= 1.0);
+                w = Math.sqrt((-2.0 * Math.log(w))/w);
+                y1 = x1 * w;
+                y2 = x2 * w;
+                use_last = true;
+           }
+
+           var retval = mean + stdev * y1;
+           if(retval > 0) 
+               return retval;
+           return -retval;
+       }
+    }
+    
+    
+    for (var i=0; i<data.length;i++){
+      var j=0;
+      var preData;
+      for (var key in data[i]){
+       // data[i][key]= Math.random();
+        if (j==0){  // the first variable
+          data[i][key]=i/(data.length-1);
+        }
+        else if (j==1){
+          var x=i/(data.length-1);
+         // if (i==63) x=0;
+          var d = -x*20+10; 
+          data[i][key] =  (0.05+(1/(1+Math.exp(d))))*0.92+(Math.random()-0.5)*0.04;
+          if (x<0.5)
+            data[i][key]*=0.8;
+          else{
+             data[i][key]=Math.sqrt(data[i][key]);
+          }
+        }
+        else if (j==2){ 
+          var v =  standard();
+          if (v>1) v=1;
+          if (v<0) v=0;
+
+          var x=i/(data.length-1);
+          // if (i==63) x=0;
+         
+          if (x<0.5)
+            data[i][key] = v/1.3;
+          else
+            data[i][key] = 0.3+v/1.5;  
+        }
+        /*
+        else if (j==5){ 
+          var x=i/(data.length-1);
+          if (x<0.5)
+            x*=0.25;
+          data[i][key] = Math.sqrt(x);
+        }
+        
+        else if (j==6){  
+          var v1 =  standard();
+          if (v1>1) v1=1;
+          if (v1<0) v1=0;
+          var v2 =  standard();
+          if (v2>1) v2=1;
+          if (v2<0) v2=0;
+
+          var x= Math.random();
+          preData={};
+          if (x<0.5){
+            data[i][key] = v1/2;
+            preData.group=1;
+            preData.value = data[i][key];
+          }  
+          else{
+            data[i][key] = 0.5+v2/2;  
+            preData.group=2;
+            preData.value = data[i][key];
+          }
+       //   console.log(data[i][key]);
+        }*/
+  
+        j++; 
+      }    
+    }
+    
+    var text = "";
+    for (var i=0; i<data.length;i++){
+      var count=0;
+      for (var key in data[i]){
+        if (count==2 || count ==11)
+          text+=data[i][key]+"\t";
+        else if (count==29)
+          text+=data[i][key];
+        count++;
+      } 
+      text += "\n";
+    }  
+      console.log(text);     
+    
+      
+  // drawScagHistogram(0, 200,200, size-50,size-120);
+  // drawScagHistogram(1, 200,600, size-50,size-120);
+  // drawScagHistogram(2, 600,600, size-50,size-120);
+  // drawScagHistogram(getIndex(2,29), 200,200, size-50,size-120);
+  // drawScagHistogram(getIndex(2,11), 200,600, size-50,size-120);
+  // drawScagHistogram(getIndex(11,29), 600,600, size-50,size-120);
+
+
+    leaderList = leaderAlgorithm(traits, disSimMonotonic);
     var pairList = cross();
-    splomMain(svg, pairList, leaderList);
+       
+ splomMain(svg, pairList, leaderList);
+// findMostDifferent();
 
     function cross() {
       var c = [], n = leaderList.length, i, j;
@@ -137,7 +261,7 @@ d3.tsv("data/BreastStandardized.csv", function(error, data_) {
     // arr: input variables
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
-      var r = 0.65;
+      var r = 0;
       var leaderList = [];
       for (var i=0; i< arr.length; i++){
         var minDis = 10000;

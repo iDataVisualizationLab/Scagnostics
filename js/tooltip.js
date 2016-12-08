@@ -239,13 +239,15 @@ function splomMain(svg_, pairList, varList) {
             return (d==d2) ? "#bb0" : "#000"; });   
       }); 
   // Titles for the diagonal.
-  svg_.selectAll(".varText")
+  svg_.
+  selectAll(".varText")
     .data(varList).enter()
     .append("text")
       .attr("class", "varText")
-      .attr("x", function(d,i){ return i * size; })
-      .attr("y", function(d,i){ return (i+0.8) * size; })
-      .text(function(d,i) { return traits[d.mi] + " ("+(d.children.length+1)+")"; })
+      .style("font-size", "20px")
+      .attr("x", function(d,i){ return i * size+20; })
+      .attr("y", function(d,i){ return (i+0.95) * size; })
+      .text(function(d,i) { return traits[d.mi]; })
       .on('mouseover', function(d) {
         if (selectedPlot<-1)
           showTip(d); 
@@ -307,67 +309,6 @@ function splom3(svg_, pairList, varList1, varList2) {
       .text(function(d,i) { return traits[d]; });       
 }  
 
-// Plot function *******************************
-function plot(p) {
-  //if ((p.i>p.j|| p.i==p.j))
-  //  return;
-  var cell = d3.select(this);
-  
-  cell.append("rect")
-      .attr("class", "frame")
-      .attr("x", padding / 2)
-      .attr("y", padding / 2)
-      .attr("width", size - padding)
-      .attr("height", size - padding)
-      .style("fill", function(d) { 
-          if (p.mi<p.mj){
-             var k = p.mj*(p.mj-1)/2+p.mi; 
-             return colorRedBlue(dataS[k]["Monotonic"]);
-          }
-          else if (p.mi>p.mj){
-            var k = p.mi*(p.mi-1)/2+p.mj; 
-            return colorRedBlue(dataS[k]["Monotonic"]);
-          }
-          else{
-            return "#000";
-          }
-      })
-      .style("stroke-width", function(d){
-        if (p.leaderi)
-          return Math.sqrt(p.leaderi.children.length + p.leaderj.children.length)+1;
-        else
-          return 1;
-      });   
-  cell.selectAll("circle")
-      .data(data)
-    .enter().append("circle")
-      .attr("cx", function(d) { return x(d[p.x]); })
-      .attr("cy", function(d) { return y(d[p.y]); })
-      .attr("r", size/30)
-      .style("fill", "#000"); 
-
-  // Show score on each plot    
-  cell.append("text")
-      .attr("class", "scoreCellText")
-      .attr("x", 3)
-      .attr("y", 14)
-      .attr("font-family", "sans-serif")
-      .attr("font-size", "8px")
-      .style("text-shadow", "1px 1px 0 rgba(0, 0, 0, 0.7")
-      .style("fill", "#ff0")
-      .text(function(d,i) { 
-        var k = -1;  
-        if (p.mi<p.mj){
-          k = p.mj*(p.mj-1)/2+p.mi; 
-        }
-        else if (p.mi>p.mj){
-           k = p.mi*(p.mi-1)/2+p.mj; 
-        }
-        return parseFloat(dataS[k]["Monotonic"]).toFixed(2); })
-      .style("fill-opacity", function(){
-        return document.getElementById("checkbox1").checked ? 1 : 0;
-      });         
-} // End plot functiong
 
 function toggleScore() {
   if (document.getElementById("checkbox1").checked){
