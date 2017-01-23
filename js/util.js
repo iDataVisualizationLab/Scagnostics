@@ -7,7 +7,7 @@
  */
 
 
-var selectedScag = "Outlying";
+var selectedScag = "Monotonic";
 var color10 = d3.scale.category10();
 
  // *************************BRUSHING **********************************
@@ -96,21 +96,78 @@ function getIndex(mi, mj){
 }
 
 
+// splom function ****************************
+function splomMain(svg_, pairList, varList) {
+  svg_.selectAll(".cellMain")
+    .data(pairList).enter()
+    .append("g")
+      .attr("class", "cellMain")
+      .attr("transform", function(d) { return "translate(" + (d.i) * size + "," + d.j * size + ")"; })
+      .each(plot)
+      .on('mouseover', function(d) {
+        if (selectedPlot<-1){
+          showTip(d); 
+        }
+      })
+      .on('click', function(d){
+        selectedPlot = getIndex(d.mi,d.mj);
+        svg_.selectAll(".frame")
+          .style("stroke", function(d2) { 
+            return (d==d2) ? "#bb0" : "#000"; });   
+      }); 
+  // Titles for the diagonal.
+  svg_.
+  selectAll(".varText")
+    .data(varList).enter()
+    .append("text")
+      .attr("class", "varText")
+      .style("font-size", "12px")
+      .attr("x", function(d,i){ return i * size+6; })
+      .attr("y", function(d,i){ return i==0 ? size-5 : (i+0.5) * size+8; })
+      .text(function(d,i) { return traits[d.mi]; })
+      .on('mouseover', function(d) {
+        if (selectedPlot<-1)
+          showTip(d); 
+      })
+      .on('click', function(d) {
+        selectedPlot = -1;
+        svg_.selectAll(".varText")
+          .style("fill", function(d2) { return d==d2 ? "#bb0" : "#000"; });   
+      });
+    // Brushing    
+    //  cell.call(brush); 
+}  
 
 // Plot function *******************************
 function plot(p) {
-  //if ((p.i>p.j|| p.i==p.j))
-  //  return;
-  var cell = d3.select(this);
-  
+// Compute the max size of leader plots
+  var maxClusterSize=0;
+  for (var i=0; i< leaderList.length; i++){
+    if (leaderList[i].children.length>maxClusterSize)
+      maxClusterSize = leaderList[i].children.length;
+  }
+  var sizeScale = d3.scale.linear().range([size*0.5,size]).domain([1,maxClusterSize]);
+     
+
+  var size2 = size;
+  var x2 = x;
+  var y2 = y;
+  var shift=0;
+  if (p.leaderi){
+    size2 = sizeScale(Math.max(p.leaderi.children.length,p.leaderj.children.length));
+    shift = (size-size2)/2;
+    x2 = d3.scale.linear().range([shift+size2*0.1 , shift+size2*0.9])
+    y2 = d3.scale.linear().range([shift+size2*0.9 , shift+size2*0.1])
+  }
+   
+  var cell = d3.select(this); 
   cell.append("rect")
       .attr("class", "frame")
-      .attr("x", padding / 2)
-      .attr("y", padding / 2)
-      .attr("width", size - padding)
-      .attr("height", size - padding)
+      .attr("x", shift+padding / 2)
+      .attr("y", shift+padding / 2)
+      .attr("width", size2 - padding)
+      .attr("height", size2 - padding)
       .style("fill", function(d) { 
-        return "#ddd";
           if (p.mi<p.mj){
              var k = p.mj*(p.mj-1)/2+p.mi; 
              return colorRedBlue(dataS[k][selectedScag]);
@@ -123,18 +180,13 @@ function plot(p) {
             return "#000";
           }
       })
-      .style("stroke-width", function(d){
-        if (p.leaderi)
-          return Math.sqrt(p.leaderi.children.length + p.leaderj.children.length)+1;
-        else
-          return 1;
-      });   
+      .style("stroke-width",0.5);   
   cell.selectAll("circle")
       .data(data)
     .enter().append("circle")
-      .attr("cx", function(d) { return x(d[p.x]); })
-      .attr("cy", function(d) { return y(d[p.y]); })
-      .attr("r", size/50)
+      .attr("cx", function(d) { return x2(d[p.x]); })
+      .attr("cy", function(d) { return y2(d[p.y]); })
+      .attr("r", size2/30)
       .style("fill", "#000"); 
 
   // Show score on each plot    
@@ -145,7 +197,7 @@ function plot(p) {
       .attr("font-family", "sans-serif")
       .attr("font-size", "8px")
       .style("text-shadow", "1px 1px 0 rgba(0, 0, 0, 0.7")
-      .style("fill", "#ff0")
+      .style("fill", "#f6f")
       .text(function(d,i) { 
         var k = -1;  
         if (p.mi<p.mj){

@@ -15,9 +15,11 @@ var colorHighlight = "#fc8";
 var buttonColor = "#ddd";
 var cellHeight = 14;
 
+var thumnailSize = 20;
+
 var tip = d3.tip()
   .attr('class', 'd3-tip')
-  .offset([0,0])
+  .offset([0,100])
   .style('border', '1px solid #555');
 
 var selectedPlot = -100;
@@ -55,13 +57,12 @@ function showTip(d) {
       d.children.forEach(function (d2){
         varList.push(d2);
       });
-      tip.offset([-(varList.length-1)*size-20,20])
+      tip.offset([-(varList.length-1)*size-20,100])
       tipW = varList.length*size;
       tipH = (varList.length)*size;
       tip_svg = d3.select('.d3-tip').append('svg')
         .attr("width", tipW)
         .attr("height", tipH);
-      
       splom2(tip_svg, pairList, varList);  
     }
     else{ // cells in the second matrix
@@ -74,8 +75,9 @@ function showTip(d) {
       d.leaderj.children.forEach(function (d2){
         varList2.push(d2);
       });
+
+    //  tip.offset([-(varList2.length)*size-20,20])
       
-      tip.offset([-(varList2.length)*size-20,20])
       tipW = (varList1.length+1)*size;
       tipH = (varList2.length+1)*size;
       tip_svg = d3.select('.d3-tip').append('svg')
@@ -86,14 +88,14 @@ function showTip(d) {
     }
   }
   else if (document.getElementById("radio2").checked){
-    var plotSize = 360;
+    var plotSize = 400;
     var padding = 60;  
     tip.offset([0,100])
     tipW = plotSize+padding;
     tipH = plotSize+padding;
     tip_svg = d3.select('.d3-tip').append('svg')
       .attr("width", tipW)
-      .attr("height", tipH);    
+      .attr("height", tipH); 
 
     var x = d3.scale.linear()
       .range([padding+30, plotSize+padding-30]);
@@ -134,13 +136,167 @@ function showTip(d) {
         .style("fill", "#aaa"); 
     }
     function mouseClickButtonNext(d){
+      // remove the stroke of the previously selected plot
+      removeSelectedThumbnails();
+
+      // Compute the next plot  
       linkedIndex++;
       if (linkedIndex==linkedPairList.length)
         linkedIndex=0;
+
+      var p = linkedPairList[linkedIndex]
+      var k = getIndex(p.mi,p.mj);       
+  
+             
+     // tip_svg.selectAll(".frame2").transition().duration(1000)
+     //   .style("fill", function(d) { 
+     //        return colorRedBlue(dataS[k][selectedScag]);
+     //   });
+
+
+      tip_svg.selectAll(".thumnails"+p.mi+"__"+p.mj).transition().duration(1000)
+        .style("stroke-width",2);  
+      
+      tip_svg.selectAll(".varThumnailText1_"+p.mi).transition().duration(1000)
+        .style("fill", "#000");
+      tip_svg.selectAll(".varThumnailText2_"+p.mj).transition().duration(1000)
+        .style("fill", "#000");  
+            
       tip_svg.selectAll(".circleLinked").transition().duration(1000)
         .attr("cx", function(d) { return x(d[linkedPairList[linkedIndex].x]); })
         .attr("cy", function(d) { return y(d[linkedPairList[linkedIndex].y]); });   
     }
+
+    // Plugin thumnails  
+    if (d.children) {  // diagonal varable names in the second matrix
+      var pairList = cross2(d);
+      var varList = [d.mi]; 
+      d.children.forEach(function (d2){
+        varList.push(d2);
+      });
+      
+      var cell = tip_svg.selectAll(".cell")
+      .data(pairList).enter()
+        .append("g")
+          .attr("class", "cell")
+          .attr("transform", function(d2) { return "translate(" +(padding+d2.i * thumnailSize) + "," + ((d.children.length-d2.j) * thumnailSize+padding) + ")"; })
+          .each(plot2);
+    }
+    else{ // cells in the second matrix
+      var pairList = cross3(d);
+      var varList1 = [d.mi];
+      d.leaderi.children.forEach(function (d2){
+        varList1.push(d2);
+      });
+      var varList2 = [d.mj];
+      d.leaderj.children.forEach(function (d2){
+        varList2.push(d2);
+      });
+
+      var cell = tip_svg.selectAll(".cell")
+        .data(pairList).enter()
+          .append("g")
+            .attr("class", "cell")
+            .attr("transform", function(d) { return "translate(" + (padding+(d.i) * thumnailSize) + "," + (padding+(d.j) * thumnailSize) + ")"; })
+            .each(plot2); 
+    }
+    // Plot2 function *******************************
+      function plot2(p) { 
+        size3=thumnailSize;
+        shift = 0;
+        x3= d3.scale.linear().range([size3*0.1 , size3*0.9])
+        y3 = d3.scale.linear().range([size3*0.9 , size3*0.1])
+
+        var cell = d3.select(this); 
+        cell.append("rect")
+            .attr("class", "thumnails"+p.mi+"__"+p.mj)
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", size3)
+            .attr("height", size3)
+            .style("stroke", "#000")
+            .style("stroke-width",0.3)
+            .style("fill", function(d) { 
+                if (p.mi<p.mj){
+                   var k = p.mj*(p.mj-1)/2+p.mi; 
+                   return colorRedBlue(dataS[k][selectedScag]);
+                }
+                else if (p.mi>p.mj){
+                  var k = p.mi*(p.mi-1)/2+p.mj; 
+                  return colorRedBlue(dataS[k][selectedScag]);
+                }
+                else{
+                  return "#000";
+                }
+            });   
+        cell.selectAll("circle")
+            .data(data)
+          .enter().append("circle")
+            .attr("cx", function(d) { return x3(d[p.x]); })
+            .attr("cy", function(d) { return y3(d[p.y]); })
+            .attr("r", size3/30)
+            .style("fill", "#000"); 
+      } // End plot functiong
+
+        var varList1, varList2; 
+        if (d.children) {  // diagonal varable names in the second matrix
+          varList1 = [d.mi]; 
+          d.children.forEach(function (d2){
+            varList1.push(d2);
+          });    
+          varList2 = varList1; 
+        }
+        else{ // cells in the second matrix
+           varList1 = [d.mi];
+           d.leaderi.children.forEach(function (d2){
+              varList1.push(d2);
+            });
+           varList2 = [d.mj];
+            d.leaderj.children.forEach(function (d2){
+              varList2.push(d2);
+            }); 
+        }  
+
+        // Draw variable name
+        tip_svg.selectAll(".varThumnailText1_") 
+          .data(varList1).enter()
+          .append("g").attr("transform", function(d,i) {
+            return "translate(" +(padding+8 + i*thumnailSize) + "," + (padding -2) + ")"+ " rotate(-40)" 
+          })
+          .append("text")
+            .attr("class", function(d){
+              return "varThumnailText1_"+d;
+            })
+            .attr("x", 0)
+            .attr("y", 0)
+            .text(function(d,i) { return traits[d]; })
+            .style("fill", function(d3) { 
+                return "#0a0";  
+           });    
+
+        tip_svg.selectAll(".varThumnailText2") 
+          .data(varList2).enter()
+          .append("g").attr("transform", function(d2,i) {
+              var yy = (padding*0.9+(i+1)*thumnailSize);
+            if (d.children){
+              yy = padding*0.9+(d.children.length-i+1)*thumnailSize  ;
+            }
+           
+            return "translate(" +(padding-3)+ "," + yy + ")"
+          })
+          .append("text")
+            .style("text-anchor", "end")
+            .attr("class", function(d){
+              return "varThumnailText2_"+d;
+            })
+            .attr("x", 0)
+            .attr("y", 0)
+            .text(function(d,i) { return traits[d]; })
+            .style("fill", function(d3) { 
+                return "#0a0";  
+            });  
+    setSelectedThumbnails(); 
+      
   }  
 
     
@@ -197,7 +353,6 @@ function cross2(d) {
       mi: mi, mj: mj});
   }
   return c;
- 
 }
 
 function cross3(d) {
@@ -219,47 +374,7 @@ function cross3(d) {
   }
 }
 
-// splom function ****************************
-function splomMain(svg_, pairList, varList) {
-  svg_.selectAll(".cellMain")
-    .data(pairList).enter()
-    .append("g")
-      .attr("class", "cellMain")
-      .attr("transform", function(d) { return "translate(" + (d.i) * size + "," + d.j * size + ")"; })
-      .each(plot)
-      .on('mouseover', function(d) {
-        if (selectedPlot<-1){
-          showTip(d); 
-        }
-      })
-      .on('click', function(d){
-        selectedPlot = getIndex(d.mi,d.mj);
-        svg_.selectAll(".frame")
-          .style("stroke", function(d2) { 
-            return (d==d2) ? "#bb0" : "#000"; });   
-      }); 
-  // Titles for the diagonal.
-  svg_.
-  selectAll(".varText")
-    .data(varList).enter()
-    .append("text")
-      .attr("class", "varText")
-      .style("font-size", "20px")
-      .attr("x", function(d,i){ return i * size+20; })
-      .attr("y", function(d,i){ return (i+0.95) * size; })
-      .text(function(d,i) { return traits[d.mi]; })
-      .on('mouseover', function(d) {
-        if (selectedPlot<-1)
-          showTip(d); 
-      })
-      .on('click', function(d) {
-        selectedPlot = -1;
-        svg_.selectAll(".varText")
-          .style("fill", function(d2) { return d==d2 ? "#bb0" : "#000"; });   
-      });
-    // Brushing    
-    //  cell.call(brush); 
-}  
+
 
 function splom2(svg_, pairList, varList) {
   var cell = svg_.selectAll(".cell")
@@ -354,10 +469,10 @@ function linkedScatterplot(svg_, plotSize, d, x, y, padding) {
     .attr("height", plotSize)
     .style("stroke", "#000") 
     .style("fill", function(d) { 
-      if (pairList.length>0)
-        return colorRedBlue(sumS/pairList.length);
-      else
-        return "#fff";  
+      //if (pairList.length>0)
+      //  return colorRedBlue(sumS/pairList.length);
+      //else
+        return "#ddd";  
     });   
 
   var a = [];
@@ -413,6 +528,7 @@ function linkedScatterplot(svg_, plotSize, d, x, y, padding) {
       .data(data)
     .enter().append("path")
         .attr("class", "line")
+        .style("stroke-width",0.5)
         .attr("d", function(d) {
           var c = [];
           for (var i=0;i<linkedPairList.length;i++){
@@ -433,61 +549,32 @@ function linkedScatterplot(svg_, plotSize, d, x, y, padding) {
       .attr("cy", function(d) { return y(d[linkedPairList[linkedIndex].y]); })
       .attr("r", plotSize/80)
       .style("fill", "#000");   
+}
 
-  // Compute variable names ****************************************
-  var varList1, varList2; 
-  if (d.children) {  // diagonal varable names in the second matrix
-    varList1 = [d.mi]; 
-    d.children.forEach(function (d2){
-      varList1.push(d2);
-    });    
-    varList2 = varList1; 
-  }
-  else{ // cells in the second matrix
-     varList1 = [d.mi];
-     d.leaderi.children.forEach(function (d2){
-        varList1.push(d2);
-      });
-     varList2 = [d.mj];
-      d.leaderj.children.forEach(function (d2){
-        varList2.push(d2);
-      }); 
-  }  
-  // Draw variable name
-  svg_.selectAll(".varText23") 
-    .data(varList1).enter()
-    .append("g").attr("transform", function(d,i) {
-      return "translate(" +(padding+10 + i*20) + "," + (padding -2) + ")"+ " rotate(-40)" 
-    })
-    .append("text")
-      .attr("class", "varText23")
-      .attr("x", 0)
-      .attr("y", 0)
-      .text(function(d,i) { return traits[d]; })
-      .style("fill", function(d3) { 
-        if (d3==p.mi)
-          return "#000";  
-        else
-          return "#0a0";  
-     });    
+function setSelectedThumbnails(){
+  if (!linkedPairList || linkedPairList.length==0) return;
+  var p1 = linkedPairList[linkedIndex]
+  tip_svg.selectAll(".thumnails"+p1.mi+"__"+p1.mj).transition().duration(1000)
+    .style("stroke-width",2);  
+  tip_svg.selectAll(".varThumnailText1_"+p1.mi).transition().duration(1000)
+    .style("fill", "#000");
+  tip_svg.selectAll(".varThumnailText2_"+p1.mj).transition().duration(1000)
+    .style("fill", "#000");   
+  var k = getIndex(p1.mi,p1.mj);       
+ // tip_svg.selectAll(".frame2").transition().duration(1000)
+ //   .style("fill", function(d) { 
+ //        return colorRedBlue(dataS[k][selectedScag]);
+ //   });  
+}
 
-  svg_.selectAll(".varText24") 
-    .data(varList2).enter()
-    .append("g").attr("transform", function(d,i) {
-      return "translate(" +(padding-3)+ "," + (padding+(i+1)*16) + ")"
-    })
-    .append("text")
-      .style("text-anchor", "end")
-      .attr("class", "varText24")
-      .attr("x", 0)
-      .attr("y", 0)
-      .text(function(d,i) { return traits[d]; })
-      .style("fill", function(d3) { 
-        if (d3==p.mj)
-          return "#000";  
-        else
-          return "#0a0";  
-      });  
+function removeSelectedThumbnails(){
+  var p1 = linkedPairList[linkedIndex]
+  tip_svg.selectAll(".thumnails"+p1.mi+"__"+p1.mj).transition().duration(1000)
+    .style("stroke-width",0.2);  
+  tip_svg.selectAll(".varThumnailText1_"+p1.mi).transition().duration(1000)
+    .style("fill", "#0a0");
+  tip_svg.selectAll(".varThumnailText2_"+p1.mj).transition().duration(1000)
+    .style("fill", "#0a0");   
 }
 
 

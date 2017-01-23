@@ -41,6 +41,8 @@ text {
 .frame {
   stroke: #444;
 }
+
+
 circle {
   fill-opacity: .8;
 }
@@ -60,7 +62,7 @@ circle.hidden {
   padding: 10px;
   font-size: 13px;
   font-family: "sans-serif";
-  background: rgba(204, 204, 204, 0.96);
+  background: rgb(255, 555, 555);
   color: #000;
   border-radius: 2px;
 }
@@ -89,7 +91,7 @@ circle.hidden {
   position:absolute;
   z-index: 0;
   top: 11px;
-  left: 800px;
+  left: 1200px;
   border: 1px solid rgba(0,0,0, 0.3);
   background-color: rgba(0,0,0, 0.15);
 }
@@ -99,8 +101,8 @@ circle.hidden {
 <div id="controlPanel"  class="controlPanel">
 <input type="checkbox" id="checkbox1"  onclick="toggleScore()">
 <label for="checkbox1" >Show monotonic scores </label><br><br>
-<input type="radio" id="radio1" name="radio1" onclick="" checked> All scatterplots in cluster<br>
-<input type="radio" id="radio2" name="radio1" onclick="" > Linked scatterplot<br>
+<input type="radio" id="radio1" name="radio1" onclick="" > All scatterplots in cluster<br>
+<input type="radio" id="radio2" name="radio1" onclick="" checked> Linked scatterplot<br>
 <input type="radio" id="radio3" name="radio1" onclick=""> Summary scatterplot  <br>
 
 
