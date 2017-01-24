@@ -37,14 +37,14 @@ var traits;
 var data, dataS;    
 var svg;
 
-//var file = "data/Breast";
+var file = "data/Breast";
 //var file = "data/Sonar";   // 2
 //var file = "data/NRC";      // This is the data for Figure 6 in the paper
 //var file = "data/Subway3";    // Good
 //var file = "data2/Communities";     // 9
 //var file = "data2/MLB2008";     // 8
 //var file = "data2/Madelon";     // 2
-var file = "data2/USEmployment";
+//var file = "data2/USEmployment";
 //var file = "data2/Usmoney";    //1
 
 
