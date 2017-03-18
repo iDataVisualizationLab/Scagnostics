@@ -95,9 +95,17 @@ circle.hidden {
   border: 1px solid rgba(0,0,0, 0.3);
   background-color: rgba(0,0,0, 0.15);
 }
-
+.state{
+ fill: none;
+ stroke: #a9a9a9;
+ stroke-width: 1;
+}
+.state:hover{
+ fill-opacity:0.5;
+}
 </style>
 <body>
+
 <div id="controlPanel"  class="controlPanel">
 <input type="checkbox" id="checkbox1"  onclick="toggleScore()">
 <label for="checkbox1" >Show monotonic scores </label><br><br>
@@ -107,9 +115,9 @@ circle.hidden {
 
 
  </label>
- <svg id="statesvg" width="900" height="600"></svg>
-</div>
 
+</div>
+<svg id="statesvg" width="930" height="600"></svg>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script src="js/States.js"></script>

@@ -346,7 +346,7 @@ function drawStatemap(id, leaderList) {
             return d.n;
         }).style("fill", function (d) {
         return d.color;
-    })
+    }).style("stroke","black")
 }
 function IndexToAbbreviation(index) {
     var states = {
