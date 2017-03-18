@@ -44,8 +44,13 @@ var svg;
 //var file = "data2/Communities";     // 9
 //var file = "data2/MLB2008";     // 8
 //var file = "data2/Madelon";     // 2
-var file = "data2/USEmployment";
 //var file = "data2/Usmoney";    //1
+
+//var file = "data2/USEmployment";
+//var file = "data3/StateEmployment";
+//var file = "data3/Construction";
+var file = "data3/Transportation";
+
 
 
 //var file = "data2/Arcene200";  // too large
@@ -245,7 +250,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
     // arr: input variables
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
-      var r = 0.5;
+      var r = 0.52;
       var leaderList = [];
       for (var i=0; i< arr.length; i++){
         var minDis = 10000;
