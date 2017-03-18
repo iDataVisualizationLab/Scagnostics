@@ -200,6 +200,8 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
     var pairList = cross();
        
  splomMain(svg, pairList, leaderList);
+
+      drawStatemap(id=statesvg, leaderList);;//Draw US Map
 // findMostDifferent();
 
     function cross() {
