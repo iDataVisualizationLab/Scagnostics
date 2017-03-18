@@ -6,7 +6,7 @@
  * OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
  */
 
-var width = 1200,
+var width = 1500,
     size = 40,
     padding = 0;//size/20;
 
@@ -47,9 +47,11 @@ var svg;
 //var file = "data2/Usmoney";    //1
 
 //var file = "data2/USEmployment";
-//var file = "data3/StateEmployment";
-//var file = "data3/Construction";
-var file = "data3/Transportation";
+//var file = "data3/Nonfarm";
+var file = "data3/Construction";
+//var file = "data3/Transportation";
+//var file = "data3/Leisure";
+//var file = "data3/Government";
 
 
 
@@ -190,7 +192,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
           return 1;
       })
     }
-    size = 1000/leaderList.length;
+    size = 1300/leaderList.length;
     x.range([size*0.9 , size*0.1]);
     y.range([size*0.1 , size*0.9  ])
       
@@ -250,7 +252,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
     // arr: input variables
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
-      var r = 0.52;
+      var r = 0.57;
       var leaderList = [];
       for (var i=0; i< arr.length; i++){
         var minDis = 10000;
