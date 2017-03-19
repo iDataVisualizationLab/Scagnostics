@@ -95,6 +95,15 @@ circle.hidden {
   border: 1px solid rgba(0,0,0, 0.3);
   background-color: rgba(0,0,0, 0.15);
 }
+#usMap {
+ position:absolute;
+ z-index: 0;
+ top: 50px;
+ left: 800px;
+ /*border: 1px solid rgba(0,0,0, 0.3);*/
+ background-color: rgba(0,0,0, 0);
+}
+
 .state{
  fill: none;
  stroke: #a9a9a9;
@@ -117,7 +126,10 @@ circle.hidden {
  </label>
 
 </div>
-<svg id="statesvg" width="930" height="600"></svg>
+<div id ="usMap">
+ <svg id="statesvg" width="930" height="600"></svg>
+</div>
+
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script src="js/States.js"></script>
