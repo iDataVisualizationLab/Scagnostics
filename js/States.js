@@ -8,11 +8,12 @@
 function drawStatemap(id, leaderList) {
     var clusters = [];
     leaderList.forEach(function (d, i) {
-        if (d.children.length > 2) {
+        if (d.children.length > 0) {
             var group=[];
             d.children.forEach(function (a) {
                 group.push(IndexToAbbreviation(a));
-            })
+            });
+            group.push(IndexToAbbreviation(d.mi));
             clusters.push(group);
         }
     });
@@ -350,56 +351,56 @@ function drawStatemap(id, leaderList) {
 }
 function IndexToAbbreviation(index) {
     var states = {
-        "1": "AL",
-        "2": "AK",
-        "3": "AZ",
-        "4": "AR",
-        "5": "CA",
-        "6": "CO",
-        "7": "CT",
-        "8": "DE",
-        "10": "FL",
-        "11": "GA",
-        "12": "HI",
-        "13": "ID",
-        "14": "IL",
-        "15": "IN",
-        "16": "IA",
-        "17": "KS",
-        "18": "KY",
-        "19": "LA",
-        "20": "ME",
-        "21": "MD",
-        "22": "MA",
-        "23": "MI",
-        "24": "MN",
-        "25": "MS",
-        "26": "MO",
-        "27": "MT",
-        "28": "NE",
-        "29": "NV",
-        "30": "NH",
-        "31": "NJ",
-        "32": "NM",
-        "33": "NY",
-        "34": "NC",
-        "35": "ND",
-        "36": "OH",
-        "37": "OK",
-        "38": "OR",
-        "39": "PA",
-        "40": "RI",
-        "41": "SC",
-        "42": "SD",
-        "43": "TN",
-        "44": "TX",
-        "45": "UT",
-        "46": "VT",
-        "47": "VA",
-        "48": "WA",
-        "49": "WV",
-        "50": "WI",
-        "51": "WY"
+        "0": "AL",
+        "1": "AK",
+        "2": "AZ",
+        "3": "AR",
+        "4": "CA",
+        "5": "CO",
+        "6": "CT",
+        "7": "DE",
+        "9": "FL",
+        "10": "GA",
+        "11": "HI",
+        "12": "ID",
+        "13": "IL",
+        "14": "IN",
+        "15": "IA",
+        "16": "KS",
+        "17": "KY",
+        "18": "LA",
+        "19": "ME",
+        "20": "MD",
+        "21": "MA",
+        "22": "MI",
+        "23": "MN",
+        "24": "MS",
+        "25": "MO",
+        "26": "MT",
+        "27": "NE",
+        "28": "NV",
+        "29": "NH",
+        "30": "NJ",
+        "31": "NM",
+        "32": "NY",
+        "33": "NC",
+        "34": "ND",
+        "35": "OH",
+        "36": "OK",
+        "37": "OR",
+        "38": "PA",
+        "39": "RI",
+        "40": "SC",
+        "41": "SD",
+        "42": "TN",
+        "43": "TX",
+        "44": "UT",
+        "45": "VT",
+        "46": "VA",
+        "47": "WA",
+        "48": "WV",
+        "49": "WI",
+        "50": "WY"
     }
     return states[index];
 }
