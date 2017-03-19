@@ -7,8 +7,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data3/LeisureStandardized.csv" afterPath="$PROJECT_DIR$/data3/LeisureStandardized.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data3/NonfarmStandardized.csv" afterPath="$PROJECT_DIR$/data3/NonfarmStandardized.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data3/TransportationStandardized.csv" afterPath="$PROJECT_DIR$/data3/TransportationStandardized.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/States.js" afterPath="$PROJECT_DIR$/js/States.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -29,8 +27,18 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1785">
+            <state relative-caret-position="385">
               <caret line="119" column="11" lean-forward="false" selection-start-line="119" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NonfarmOutput2.csv" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/data3/NonfarmOutput2.csv">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="450">
+              <caret line="30" column="25" lean-forward="true" selection-start-line="30" selection-start-column="25" selection-end-line="30" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -93,7 +101,7 @@
         <entry file="file://$PROJECT_DIR$/data3/ConstructionStandardized.csv">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="655" selection-end-line="0" selection-end-column="655" />
+              <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="652" selection-end-line="0" selection-end-column="652" />
               <folding />
             </state>
           </provider>
@@ -109,21 +117,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ConstructionOutput2.csv" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data3/ConstructionOutput2.csv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="GovernmentStandardized.csv" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data3/GovernmentStandardized.csv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="655" selection-end-line="0" selection-end-column="655" />
+            <state relative-caret-position="60">
+              <caret line="4" column="538" lean-forward="false" selection-start-line="4" selection-start-column="538" selection-end-line="4" selection-end-column="538" />
               <folding />
             </state>
           </provider>
@@ -133,7 +131,7 @@
         <entry file="file://$PROJECT_DIR$/data3/LeisureStandardized.csv">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="655" selection-end-line="0" selection-end-column="655" />
+              <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="652" selection-end-line="0" selection-end-column="652" />
               <folding />
             </state>
           </provider>
@@ -143,17 +141,17 @@
         <entry file="file://$PROJECT_DIR$/data3/NonfarmStandardized.csv">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="655" selection-end-line="0" selection-end-column="655" />
+              <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="652" selection-end-line="0" selection-end-column="652" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TransportationStandardized.csv" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TransportationStandardized.csv" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data3/TransportationStandardized.csv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="655" selection-end-line="0" selection-end-column="655" />
+            <state relative-caret-position="210">
+              <caret line="14" column="567" lean-forward="true" selection-start-line="14" selection-start-column="567" selection-end-line="14" selection-end-column="567" />
               <folding />
             </state>
           </provider>
@@ -333,7 +331,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1981000" />
+    <option name="totallyTimeSpent" value="2349000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="803" extended-state="0" />
@@ -516,14 +514,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1785">
-          <caret line="119" column="11" lean-forward="false" selection-start-line="119" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/States.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -534,26 +524,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data3/ConstructionStandardized.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="655" selection-end-line="0" selection-end-column="655" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data3/GovernmentStandardized.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="655" selection-end-line="0" selection-end-column="655" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data3/LeisureStandardized.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="655" selection-end-line="0" selection-end-column="655" />
+          <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="652" selection-end-line="0" selection-end-column="652" />
           <folding />
         </state>
       </provider>
@@ -561,15 +535,47 @@
     <entry file="file://$PROJECT_DIR$/data3/NonfarmStandardized.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="655" selection-end-line="0" selection-end-column="655" />
+          <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="652" selection-end-line="0" selection-end-column="652" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data3/TransportationStandardized.csv">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="567" lean-forward="true" selection-start-line="14" selection-start-column="567" selection-end-line="14" selection-end-column="567" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data3/ConstructionStandardized.csv">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="655" selection-end-line="0" selection-end-column="655" />
+          <caret line="0" column="655" lean-forward="false" selection-start-line="0" selection-start-column="652" selection-end-line="0" selection-end-column="652" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data3/GovernmentStandardized.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="538" lean-forward="false" selection-start-line="4" selection-start-column="538" selection-end-line="4" selection-end-column="538" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="119" column="11" lean-forward="false" selection-start-line="119" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data3/NonfarmOutput2.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="30" column="25" lean-forward="true" selection-start-line="30" selection-start-column="25" selection-end-line="30" selection-end-column="25" />
           <folding />
         </state>
       </provider>
