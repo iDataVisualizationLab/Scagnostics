@@ -169,8 +169,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
       } 
       text += "\n";
     }  
-      console.log(text);  */   
-    
+      console.log(text);  */
       
   // drawScagHistogram(0, 200,200, size-50,size-120);
   // drawScagHistogram(1, 200,600, size-50,size-120);
@@ -198,10 +197,10 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
       
 
     var pairList = cross();
-       
- splomMain(svg, pairList, leaderList);
 
-      drawStatemap(id=statesvg, leaderList);;//Draw US Map
+      splomMain(svg, pairList, leaderList);
+
+    drawStatemap(id=statesvg, leaderList);//Draw US Map
 // findMostDifferent();
 
     function cross() {
