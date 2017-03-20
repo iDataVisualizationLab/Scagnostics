@@ -184,13 +184,13 @@ function plot(p) {
             return "#fff";
           }
       })
-      .style("stroke-width",2.5);
+      .style("stroke-width",0.5);
   cell.selectAll("circle")
       .data(data)
     .enter().append("circle")
       .attr("cx", function(d) { return x2(d[p.x]); })
       .attr("cy", function(d) { return y2(d[p.y]); })
-      .attr("r", size2/40)
+      .attr("r", size2/20)
       .style("fill", "#000"); 
 
   // Show score on each plot    

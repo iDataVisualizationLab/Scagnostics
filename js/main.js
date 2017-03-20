@@ -191,7 +191,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
           return 1;
       })
     }
-    size = 2600/leaderList.length;
+    size = 1200/leaderList.length;
     x.range([size*0.9 , size*0.1]);
     y.range([size*0.1 , size*0.9  ])
       
@@ -253,7 +253,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
     // arr: input variables
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
-      var r = 0.72;
+      var r = 0.7;
       var leaderList = [];
       for (var i=0; i< arr.length; i++){
         var minDis = 10000;
