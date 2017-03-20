@@ -7,7 +7,7 @@
  */
 
 var width = 1500,
-    size = 40,
+    size,
     padding = 0;//size/20;
 
 var x = d3.scale.linear();
@@ -39,7 +39,7 @@ var svg;
 
 //var file = "data/Breast";
 //var file = "data/Sonar";   // 2
-//var file = "data/NRC";      // This is the data for Figure 6 in the paper
+var file = "data/NRC";      // This is the data for Figure 6 in the paper
 //var file = "data/Subway3";    // Good
 //var file = "data2/Communities";     // 9
 //var file = "data2/MLB2008";     // 8
@@ -47,7 +47,7 @@ var svg;
 //var file = "data2/Usmoney";    //1
 
 //var file = "data2/USEmployment";
-var file = "data3/Nonfarm";
+//var file = "data3/Nonfarm";
 //var file = "data3/Construction";
 //var file = "data3/Transportation";
 //var file = "data3/Leisure";
@@ -191,7 +191,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
           return 1;
       })
     }
-    size = 1300/leaderList.length;
+    size = 2600/leaderList.length;
     x.range([size*0.9 , size*0.1]);
     y.range([size*0.1 , size*0.9  ])
       
@@ -253,7 +253,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
     // arr: input variables
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
-      var r = 0.4;
+      var r = 0.72;
       var leaderList = [];
       for (var i=0; i< arr.length; i++){
         var minDis = 10000;

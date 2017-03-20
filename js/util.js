@@ -147,9 +147,8 @@ function plot(p) {
       maxClusterSize = leaderList[i].children.length;
   }
   var sizeScale = d3.scale.linear().range([size*0.5,size]).domain([1,maxClusterSize]);
-     
 
-  var size2 = size;
+  var size2 = size-5;
   var x2 = x;
   var y2 = y;
   var shift=0;
@@ -158,6 +157,11 @@ function plot(p) {
     shift = (size-size2)/2;
     x2 = d3.scale.linear().range([shift+size2*0.1 , shift+size2*0.9])
     y2 = d3.scale.linear().range([shift+size2*0.9 , shift+size2*0.1])
+  }
+  else{
+
+      x2 = d3.scale.linear().range([shift+size2*0.1 , shift+size2*0.9])
+      y2 = d3.scale.linear().range([shift+size2*0.9 , shift+size2*0.1])
   }
    
   var cell = d3.select(this); 
@@ -177,16 +181,16 @@ function plot(p) {
             return colorRedBlue(dataS[k][selectedScag]);
           }
           else{
-            return "#000";
+            return "#fff";
           }
       })
-      .style("stroke-width",0.5);   
+      .style("stroke-width",2.5);
   cell.selectAll("circle")
       .data(data)
     .enter().append("circle")
       .attr("cx", function(d) { return x2(d[p.x]); })
       .attr("cy", function(d) { return y2(d[p.y]); })
-      .attr("r", size2/30)
+      .attr("r", size2/40)
       .style("fill", "#000"); 
 
   // Show score on each plot    
