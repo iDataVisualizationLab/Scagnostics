@@ -235,6 +235,8 @@ function showTip(d) {
             .attr("cx", function(d) { return x3(d[p.x]); })
             .attr("cy", function(d) { return y3(d[p.y]); })
             .attr("r", size3/30)
+           // .style("stroke", "#fff")
+           // .style("stroke-width",0.3)
             .style("fill", "#000"); 
       } // End plot functiong
 
@@ -330,8 +332,8 @@ function showTip(d) {
       .style("fill", "#aaa"); 
   }
   function mouseClickButtonClose(d){
-    svg.selectAll(".varText")
-      .style("fill", "#000"); 
+   // svg.selectAll(".varText")
+   //   .style("fill", "#000");
     svg.selectAll(".frame")
       .style("stroke", "#000"); 
     selectedPlot = -100;

@@ -50,7 +50,7 @@ var file = "data/NRC";      // This is the data for Figure 6 in the paper
 //var file = "data3/Nonfarm";
 //var file = "data3/Construction";
 //var file = "data3/Transportation";
-//var file = "data3/Leisure";
+var file = "data3/Leisure";
 //var file = "data3/Government";
 
 
@@ -191,14 +191,14 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
           return 1;
       })
     }
-    size = 1200/leaderList.length;
+    size = 1300/leaderList.length;
     x.range([size*0.9 , size*0.1]);
     y.range([size*0.1 , size*0.9  ])
       
 
     var pairList = cross();
 
-      splomMain(svg, pairList, leaderList);
+    splomMain(svg, pairList, leaderList);
 
     drawStatemap(id=statesvg, leaderList);//Draw US Map
 // findMostDifferent();
@@ -254,6 +254,16 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
       var r = 0.7;
+      if (file== "data3/Nonfarm")
+          r =0.4;
+      else  if (file== "data3/Construction")
+          r =0.53;
+      else  if (file== "data3/Transportation")
+          r =0.52;
+      else  if (file== "data3/Leisure")
+          r =0.4;
+
+
       var leaderList = [];
       for (var i=0; i< arr.length; i++){
         var minDis = 10000;
@@ -278,7 +288,26 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
           leaderList.push(newLeader);
         }  
       }
+      // Print out the leader list
+        var count = 0;
+      for (var i=0;i<leaderList.length;i++){
+          if (leaderList[i].children.length>0)
+              count++;
+      }
+        console.log("number of non-singleton clusters:"+count);
+
+
       return leaderList;
     }
+      svg.selectAll(".varText").style("fill", function(d){
+          //return "#ccc";
+        //  debugger;
+          if (stateToColor[traits[d.mi].trim()]== undefined)
+              return "#ccc";
+          return stateToColor[traits[d.mi].trim()];
+      })  // this is for the use case ************************ March 20 2017
+
+
+
   });  
 });
