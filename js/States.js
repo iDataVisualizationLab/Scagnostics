@@ -151,7 +151,7 @@ function drawStatemap(id, leaderList) {
         {
             id: "DC",
             color: "white",
-            n: "District Of Columbia",
+            n: "District of Columbia",
             d: "M805.81945,250.84384L803.96117,249.01967L802.72854,248.33338L804.17155,246.31091L807.06064,248.25941L805.81945,250.84384Z"
         },
         {

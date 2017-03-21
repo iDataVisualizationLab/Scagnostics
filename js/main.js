@@ -47,10 +47,10 @@ var file = "data/NRC";      // This is the data for Figure 6 in the paper
 //var file = "data2/Usmoney";    //1
 
 //var file = "data2/USEmployment";
-//var file = "data3/Nonfarm";
+var file = "data3/Nonfarm";
 //var file = "data3/Construction";
 //var file = "data3/Transportation";
-var file = "data3/Leisure";
+//var file = "data3/Leisure";
 //var file = "data3/Government";
 
 
@@ -255,13 +255,15 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
     function leaderAlgorithm(arr, disSim){
       var r = 0.7;
       if (file== "data3/Nonfarm")
-          r =0.4;
+          r =0.42;
       else  if (file== "data3/Construction")
           r =0.53;
       else  if (file== "data3/Transportation")
           r =0.52;
       else  if (file== "data3/Leisure")
           r =0.4;
+      else  if (file== "data3/Government")
+          r =0.45;
 
 
       var leaderList = [];
@@ -302,8 +304,10 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
       svg.selectAll(".varText").style("fill", function(d){
           //return "#ccc";
         //  debugger;
-          if (stateToColor[traits[d.mi].trim()]== undefined)
+          if (stateToColor[traits[d.mi].trim()]== undefined){
               return "#ccc";
+          }
+
           return stateToColor[traits[d.mi].trim()];
       })  // this is for the use case ************************ March 20 2017
 
