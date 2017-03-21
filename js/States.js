@@ -371,6 +371,7 @@ function IndexToAbbreviation(index) {
         "5": "CO",
         "6": "CT",
         "7": "DE",
+        "8": "DC",
         "9": "FL",
         "10": "GA",
         "11": "HI",
