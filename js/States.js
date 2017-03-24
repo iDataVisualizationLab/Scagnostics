@@ -331,16 +331,28 @@ function drawStatemap(id, leaderList) {
     ];
 
 
+    clusters.sort(function(a,b){
+        if (a.length<b.length)
+            return 1;
+        else
+            return -1;
+    });
+    clusters.forEach(function (a, i) {
+
+            a.color = colorScale(i);
+
+    });
+
     uStatePaths.forEach(function (d) {
         clusters.forEach(function (a, i) {
             if (a.indexOf(d.id) >= 0) {
-                d.color = colorScale(i);
+                d.color = a.color;
             }
-           // else{
-            //    d.color = "#444";
-           // }
-        })
+        });
     });
+
+
+
     uStatePaths.forEach(function(d){
         if (d.color=="white")
          d.color = "#ccc";

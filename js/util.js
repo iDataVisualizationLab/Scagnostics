@@ -124,7 +124,7 @@ function splomMain(svg_, pairList, varList) {
       .attr("class", "varText")
       .style("font-size", "18px")
       .attr("x", function(d,i){ return i * size+6; })
-      .attr("y", function(d,i){ return i==0 ? size : (i+0.5) * size+12; })
+      .attr("y", function(d,i){ return i==0 ? size -10: (i+0.5) * size+10; })
       .text(function(d,i) { return traits[d.mi]; })
       .style("text-shadow", "1px 1px 1px #000000")
       .on('mouseover', function(d) {

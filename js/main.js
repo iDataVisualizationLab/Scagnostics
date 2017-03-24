@@ -39,7 +39,7 @@ var svg;
 
 //var file = "data/Breast";
 //var file = "data/Sonar";   // 2
-var file = "data/NRC";      // This is the data for Figure 6 in the paper
+//var file = "data/NRC";      // This is the data for Figure 6 in the paper
 //var file = "data/Subway3";    // Good
 //var file = "data2/Communities";     // 9
 //var file = "data2/MLB2008";     // 8
@@ -47,11 +47,11 @@ var file = "data/NRC";      // This is the data for Figure 6 in the paper
 //var file = "data2/Usmoney";    //1
 
 //var file = "data2/USEmployment";
-var file = "data3/Nonfarm";
+//var file = "data3/Nonfarm";
 //var file = "data3/Construction";
 //var file = "data3/Transportation";
 //var file = "data3/Leisure";
-//var file = "data3/Government";
+var file = "data3/Government";
 
 
 
@@ -257,13 +257,13 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
       if (file== "data3/Nonfarm")
           r =0.42;
       else  if (file== "data3/Construction")
-          r =0.53;
+          r =0.64;
       else  if (file== "data3/Transportation")
           r =0.52;
       else  if (file== "data3/Leisure")
           r =0.4;
       else  if (file== "data3/Government")
-          r =0.45;
+          r =0.447;
 
 
       var leaderList = [];
