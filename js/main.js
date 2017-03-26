@@ -30,8 +30,11 @@ var color = d3.scale.category10();
 //******************************
 
 var colorRedBlue = d3.scale.linear()
-    .domain([0, 0.1, 0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
+   .domain([0, 0.1, 0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
     .range(["#9dbee6","#afcae6","#c8dce6","#e6e6e6","#e6e6d8","#e6d49c","#e6b061","#e6852f","#e6531a","#e61e1a"]);
+    //.domain([0, 0.1, 0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
+    //.range(["#9dbee6","#9dbee6","#afcae6","#c8dce6","#e6e6e6","#e6e6d8","#e6d49c","#e6b061","#e6852f","#e6531a"]);
+
 var leaderList;
 var traits;    
 var data, dataS;    
@@ -48,10 +51,10 @@ var svg;
 
 //var file = "data2/USEmployment";
 //var file = "data3/Nonfarm";
-//var file = "data3/Construction";
+var file = "data3/Construction";
 //var file = "data3/Transportation";
 //var file = "data3/Leisure";
-var file = "data3/Government";
+//var file = "data3/Government";
 
 
 
@@ -180,6 +183,13 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
 
 
     leaderList = leaderAlgorithm(traits, disSim); // Update the similarity function here
+
+    //  var obj = leaderList
+      var tmp = leaderList[3];
+      leaderList[3] = leaderList[10];
+      leaderList[10] =tmp;
+     debugger;
+
     for (i = 0; i < leaderList.length; i++) {
       leaderList[i].children.sort(function(a,b){
         var mi = leaderList[i].mi;
@@ -191,7 +201,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
           return 1;
       })
     }
-    size = 1300/leaderList.length;
+    size = 1400/leaderList.length;
     x.range([size*0.9 , size*0.1]);
     y.range([size*0.1 , size*0.9  ])
       
@@ -257,7 +267,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
       if (file== "data3/Nonfarm")
           r =0.42;
       else  if (file== "data3/Construction")
-          r =0.64;
+          r =.6;
       else  if (file== "data3/Transportation")
           r =0.52;
       else  if (file== "data3/Leisure")
@@ -301,7 +311,9 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
 
       return leaderList;
     }
-      svg.selectAll(".varText").style("fill", function(d){
+
+    // Color var text by states for the Use case
+    /*  svg.selectAll(".varText").style("fill", function(d){
           //return "#ccc";
         //  debugger;
           if (stateToColor[traits[d.mi].trim()]== undefined){
@@ -310,7 +322,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
 
           return stateToColor[traits[d.mi].trim()];
       })  // this is for the use case ************************ March 20 2017
-
+*/
 
 
   });  

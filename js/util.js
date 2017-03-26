@@ -123,10 +123,10 @@ function splomMain(svg_, pairList, varList) {
     .append("text")
       .attr("class", "varText")
       .style("font-size", "18px")
-      .attr("x", function(d,i){ return i * size+6; })
-      .attr("y", function(d,i){ return i==0 ? size -10: (i+0.5) * size+10; })
+      .attr("x", function(d,i){ return i * size+3; })
+      .attr("y", function(d,i){ return i==0 ? size -5: (i+0.5) * size+6; })
       .text(function(d,i) { return traits[d.mi]; })
-      .style("text-shadow", "1px 1px 1px #000000")
+    //  .style("text-shadow", "1px 1px 1px #000000")
       .on('mouseover', function(d) {
         if (selectedPlot<-1)
           showTip(d);
@@ -134,7 +134,7 @@ function splomMain(svg_, pairList, varList) {
       .on('click', function(d) {
         selectedPlot = -1;
         svg_.selectAll(".varText")
-          .style("fill", function(d2) { return d==d2 ? "#bb0" : "#000"; });
+          .style("fill", function(d2) { return d==d2 ? "#000" : "#000"; });
       });
   //debugger;
     // Brushing    
@@ -175,7 +175,7 @@ function plot(p) {
       .attr("width", size2 - padding)
       .attr("height", size2 - padding)
       .style("fill", function(d) {
-          return "#bbb";
+          //return "#bbb";
             if (p.mi<p.mj){
              var k = p.mj*(p.mj-1)/2+p.mi; 
              return colorRedBlue(dataS[k][selectedScag]);
@@ -196,7 +196,7 @@ function plot(p) {
       .attr("cy", function(d) { return y2(d[p.y]); })
       .attr("r", size2/30)
       .style("stroke","#fff")
-      .style("stroke-width",size2/200)
+      .style("stroke-width",size2/1000)
       .style("stroke-opacity",0.5)
       .style("fill", "#000");
 

@@ -15,7 +15,7 @@ var colorHighlight = "#fc8";
 var buttonColor = "#ddd";
 var cellHeight = 14;
 
-var thumnailSize = 20;
+var thumnailSize = 30;
 
 var tip = d3.tip()
   .attr('class', 'd3-tip')
