@@ -113,27 +113,30 @@ function splomMain(svg_, pairList, varList) {
         selectedPlot = getIndex(d.mi,d.mj);
         svg_.selectAll(".frame")
           .style("stroke", function(d2) { 
-            return (d==d2) ? "#bb0" : "#000"; });   
-      }); 
+            return (d==d2) ? "#bb0" : "#000"; });
+      })
+      ;
   // Titles for the diagonal.
   svg_.
   selectAll(".varText")
     .data(varList).enter()
     .append("text")
       .attr("class", "varText")
-      .style("font-size", "12px")
-      .attr("x", function(d,i){ return i * size+6; })
-      .attr("y", function(d,i){ return i==0 ? size-5 : (i+0.5) * size+8; })
+      .style("font-size", "18px")
+      .attr("x", function(d,i){ return i * size+3; })
+      .attr("y", function(d,i){ return i==0 ? size -5: (i+0.5) * size+6; })
       .text(function(d,i) { return traits[d.mi]; })
+    //  .style("text-shadow", "1px 1px 1px #000000")
       .on('mouseover', function(d) {
         if (selectedPlot<-1)
-          showTip(d); 
+          showTip(d);
       })
       .on('click', function(d) {
         selectedPlot = -1;
         svg_.selectAll(".varText")
-          .style("fill", function(d2) { return d==d2 ? "#bb0" : "#000"; });   
+          .style("fill", function(d2) { return d==d2 ? "#000" : "#000"; });
       });
+  //debugger;
     // Brushing    
     //  cell.call(brush); 
 }  
@@ -147,9 +150,8 @@ function plot(p) {
       maxClusterSize = leaderList[i].children.length;
   }
   var sizeScale = d3.scale.linear().range([size*0.5,size]).domain([1,maxClusterSize]);
-     
 
-  var size2 = size;
+  var size2 = size-5;
   var x2 = x;
   var y2 = y;
   var shift=0;
@@ -159,6 +161,11 @@ function plot(p) {
     x2 = d3.scale.linear().range([shift+size2*0.1 , shift+size2*0.9])
     y2 = d3.scale.linear().range([shift+size2*0.9 , shift+size2*0.1])
   }
+  else{
+
+      x2 = d3.scale.linear().range([shift+size2*0.1 , shift+size2*0.9])
+      y2 = d3.scale.linear().range([shift+size2*0.9 , shift+size2*0.1])
+  }
    
   var cell = d3.select(this); 
   cell.append("rect")
@@ -167,8 +174,9 @@ function plot(p) {
       .attr("y", shift+padding / 2)
       .attr("width", size2 - padding)
       .attr("height", size2 - padding)
-      .style("fill", function(d) { 
-          if (p.mi<p.mj){
+      .style("fill", function(d) {
+          //return "#bbb";
+            if (p.mi<p.mj){
              var k = p.mj*(p.mj-1)/2+p.mi; 
              return colorRedBlue(dataS[k][selectedScag]);
           }
@@ -177,17 +185,20 @@ function plot(p) {
             return colorRedBlue(dataS[k][selectedScag]);
           }
           else{
-            return "#000";
+            return "#fff";
           }
       })
-      .style("stroke-width",0.5);   
+      .style("stroke-width",0.5);
   cell.selectAll("circle")
       .data(data)
     .enter().append("circle")
       .attr("cx", function(d) { return x2(d[p.x]); })
       .attr("cy", function(d) { return y2(d[p.y]); })
       .attr("r", size2/30)
-      .style("fill", "#000"); 
+      .style("stroke","#fff")
+      .style("stroke-width",size2/1000)
+      .style("stroke-opacity",0.5)
+      .style("fill", "#000");
 
   // Show score on each plot    
   cell.append("text")
@@ -195,7 +206,7 @@ function plot(p) {
       .attr("x", 3)
       .attr("y", 14)
       .attr("font-family", "sans-serif")
-      .attr("font-size", "8px")
+      .attr("font-size", "12px")
       .style("text-shadow", "1px 1px 0 rgba(0, 0, 0, 0.7")
       .style("fill", "#f6f")
       .text(function(d,i) { 

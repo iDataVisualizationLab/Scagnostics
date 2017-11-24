@@ -29,7 +29,6 @@ path {
 text {
   font-weight: bold;
   font-size: 12px;
-  text-transform: capitalize;
 }
 
 .cell text {
@@ -91,13 +90,30 @@ circle.hidden {
   position:absolute;
   z-index: 0;
   top: 11px;
-  left: 1200px;
+  left: 1800px;
   border: 1px solid rgba(0,0,0, 0.3);
   background-color: rgba(0,0,0, 0.15);
 }
+#usMap {
+ position:absolute;
+ z-index: 0;
+ top: 100px;
+ left: 1800px;
+ /*border: 1px solid rgba(0,0,0, 0.3);*/
+ background-color: rgba(0,0,0, 0);
+}
 
+.state{
+ fill: none;
+ stroke: #a9a9a9;
+ stroke-width: 1;
+}
+.state:hover{
+ fill-opacity:0.5;
+}
 </style>
 <body>
+
 <div id="controlPanel"  class="controlPanel">
 <input type="checkbox" id="checkbox1"  onclick="toggleScore()">
 <label for="checkbox1" >Show monotonic scores </label><br><br>
@@ -106,16 +122,22 @@ circle.hidden {
 <input type="radio" id="radio3" name="radio1" onclick=""> Summary scatterplot  <br>
 
 
- </label> 
+ </label>
 
+</div>
+<div id ="usMap">
+ <svg id="statesvg" width="930" height="600"></svg>
 </div>
 
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script src="js/States.js"></script>
 <script src="js/tooltip.js"></script>
 <script src="js/util.js"></script>
 <script src="js/main.js"></script>
+
 <script>
 
 </script>
+
 </body>

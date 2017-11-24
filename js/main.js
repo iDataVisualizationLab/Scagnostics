@@ -6,8 +6,8 @@
  * OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
  */
 
-var width = 1200,
-    size = 40,
+var width = 1500,
+    size,
     padding = 0;//size/20;
 
 var x = d3.scale.linear();
@@ -30,22 +30,32 @@ var color = d3.scale.category10();
 //******************************
 
 var colorRedBlue = d3.scale.linear()
-    .domain([0, 0.1, 0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
+   .domain([0, 0.1, 0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
     .range(["#9dbee6","#afcae6","#c8dce6","#e6e6e6","#e6e6d8","#e6d49c","#e6b061","#e6852f","#e6531a","#e61e1a"]);
+    //.domain([0, 0.1, 0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
+    //.range(["#9dbee6","#9dbee6","#afcae6","#c8dce6","#e6e6e6","#e6e6d8","#e6d49c","#e6b061","#e6852f","#e6531a"]);
+
 var leaderList;
 var traits;    
 var data, dataS;    
 var svg;
 
-var file = "data/Breast";
+//var file = "data/Breast";
 //var file = "data/Sonar";   // 2
 //var file = "data/NRC";      // This is the data for Figure 6 in the paper
 //var file = "data/Subway3";    // Good
 //var file = "data2/Communities";     // 9
 //var file = "data2/MLB2008";     // 8
 //var file = "data2/Madelon";     // 2
-//var file = "data2/USEmployment";
 //var file = "data2/Usmoney";    //1
+
+//var file = "data2/USEmployment";
+//var file = "data3/Nonfarm";
+var file = "data3/Construction";
+//var file = "data3/Transportation";
+//var file = "data3/Leisure";
+//var file = "data3/Government";
+
 
 
 //var file = "data2/Arcene200";  // too large
@@ -162,8 +172,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
       } 
       text += "\n";
     }  
-      console.log(text);  */   
-    
+      console.log(text);  */
       
   // drawScagHistogram(0, 200,200, size-50,size-120);
   // drawScagHistogram(1, 200,600, size-50,size-120);
@@ -174,6 +183,13 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
 
 
     leaderList = leaderAlgorithm(traits, disSim); // Update the similarity function here
+
+    //  var obj = leaderList
+      var tmp = leaderList[3];
+      leaderList[3] = leaderList[10];
+      leaderList[10] =tmp;
+     debugger;
+
     for (i = 0; i < leaderList.length; i++) {
       leaderList[i].children.sort(function(a,b){
         var mi = leaderList[i].mi;
@@ -185,14 +201,16 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
           return 1;
       })
     }
-    size = 1000/leaderList.length;
+    size = 1400/leaderList.length;
     x.range([size*0.9 , size*0.1]);
     y.range([size*0.1 , size*0.9  ])
       
 
     var pairList = cross();
-       
- splomMain(svg, pairList, leaderList);
+
+    splomMain(svg, pairList, leaderList);
+
+    drawStatemap(id=statesvg, leaderList);//Draw US Map
 // findMostDifferent();
 
     function cross() {
@@ -245,7 +263,19 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
     // arr: input variables
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
-      var r = 0.75;
+      var r = 0.7;
+      if (file== "data3/Nonfarm")
+          r =0.42;
+      else  if (file== "data3/Construction")
+          r =.6;
+      else  if (file== "data3/Transportation")
+          r =0.52;
+      else  if (file== "data3/Leisure")
+          r =0.4;
+      else  if (file== "data3/Government")
+          r =0.447;
+
+
       var leaderList = [];
       for (var i=0; i< arr.length; i++){
         var minDis = 10000;
@@ -270,7 +300,30 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
           leaderList.push(newLeader);
         }  
       }
+      // Print out the leader list
+        var count = 0;
+      for (var i=0;i<leaderList.length;i++){
+          if (leaderList[i].children.length>0)
+              count++;
+      }
+        console.log("number of non-singleton clusters:"+count);
+
+
       return leaderList;
     }
+
+    // Color var text by states for the Use case
+    /*  svg.selectAll(".varText").style("fill", function(d){
+          //return "#ccc";
+        //  debugger;
+          if (stateToColor[traits[d.mi].trim()]== undefined){
+              return "#ccc";
+          }
+
+          return stateToColor[traits[d.mi].trim()];
+      })  // this is for the use case ************************ March 20 2017
+*/
+
+
   });  
 });
