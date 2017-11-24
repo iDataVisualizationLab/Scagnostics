@@ -170,7 +170,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
   // drawScagHistogram(2, 600,600, size-50,size-120);
   // drawScagHistogram(getIndex(2,29), 200,200, size-50,size-120);
   // drawScagHistogram(getIndex(2,11), 200,600, size-50,size-120);
-  // drawScagHistogram(getIndex(11,29), 600,600, size-50,size-120);
+   drawScagHistogram(getIndex(11,29), 600,200, size*4,size*4);
 
 
     leaderList = leaderAlgorithm(traits, disSim); // Update the similarity function here

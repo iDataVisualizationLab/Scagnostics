@@ -206,7 +206,8 @@ function plot(p) {
         else if (p.mi>p.mj){
            k = p.mi*(p.mi-1)/2+p.mj; 
         }
-        return parseFloat(dataS[k][selectedScag]).toFixed(2); })
+        return parseFloat(dataS[k][selectedScag]).toFixed(2); 
+      })
       .style("fill-opacity", function(){
         return document.getElementById("checkbox1").checked ? 1 : 0;
       });         
@@ -220,6 +221,7 @@ function drawScagHistogram(pairId, x_, y_, w, h){
     obj.value=dataS[pairId][key];
     a.push(obj);
   }
+  
   var x = d3.scale.ordinal().rangeRoundBands([0, w], .05);
       y = d3.scale.linear().rangeRound([h, 0]);
 
