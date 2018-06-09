@@ -51,10 +51,11 @@ var svg;
 
 //var file = "data2/USEmployment";
 //var file = "data3/Nonfarm";
-var file = "data3/Construction";
+//var file = "data3/Construction";
 //var file = "data3/Transportation";
 //var file = "data3/Leisure";
 //var file = "data3/Government";
+var file = "data4/Soil";
 
 
 
@@ -263,7 +264,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
     // arr: input variables
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
-      var r = 0.7;
+      var r = 1.2;
       if (file== "data3/Nonfarm")
           r =0.42;
       else  if (file== "data3/Construction")
