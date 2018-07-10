@@ -51,15 +51,17 @@ var svg;
 
 //var file = "data2/USEmployment";
 //var file = "data3/Nonfarm";
-var file = "data3/Construction";
+//var file = "data3/Construction";
 //var file = "data3/Transportation";
 //var file = "data3/Leisure";
-//var file = "data3/Government";
+//var file = "data3/Transportation";
+
+//var file = "data4/Breast";
 
 
 
 //var file = "data2/Arcene200";  // too large
-//var file = "data2/2016";  // Sample data of 3 variables for Figure 5 in the paper
+var file = "data2/2016";  // Sample data of 3 variables for Figure 5 in the paper
 
 //  d3.tsv("data/Subway3Standardized.csv", function(error, data_) {
 d3.tsv(file+"Standardized.csv", function(error, data_) {
@@ -188,18 +190,18 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
       var tmp = leaderList[3];
       leaderList[3] = leaderList[10];
       leaderList[10] =tmp;
-     debugger;
 
-    for (i = 0; i < leaderList.length; i++) {
-      leaderList[i].children.sort(function(a,b){
-        var mi = leaderList[i].mi;
-        var index1 = getIndex(mi,a);
-        var index2 = getIndex(mi,b);
-        if (dataS[index1]["Monotonic"]>dataS[index2]["Monotonic"])
-          return -1;
-        else
-          return 1;
-      })
+    for (var i = 0; i < leaderList.length; i++) {
+              leaderList[i].children.sort(function(a,b){
+                var mi = leaderList[i].mi;
+                var index1 = getIndex(mi,a);
+                var index2 = getIndex(mi,b);
+                if (dataS[index1]["Monotonic"]>dataS[index2]["Monotonic"])
+                  return -1;
+                else
+                  return 1;
+              })
+
     }
     size = 1400/leaderList.length;
     x.range([size*0.9 , size*0.1]);
@@ -263,7 +265,7 @@ d3.tsv(file+"Standardized.csv", function(error, data_) {
     // arr: input variables
     // sim: similarity funciton
     function leaderAlgorithm(arr, disSim){
-      var r = 0.7;
+      var r = 1.2;
       if (file== "data3/Nonfarm")
           r =0.42;
       else  if (file== "data3/Construction")
